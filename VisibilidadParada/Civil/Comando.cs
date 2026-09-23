@@ -34,7 +34,18 @@ namespace VisibilidadParada.Civil
             }
             catch (System.Exception ex)
             {
-                doc.Editor.WriteMessage("\nError en VISIBILIDAD: " + ex.Message);
+                // Se muestra la causa raíz y dónde ocurrió, para poder diagnosticar sin depurador
+                var raiz = ex;
+                while (raiz.InnerException != null) raiz = raiz.InnerException;
+                string donde = "";
+                try
+                {
+                    var st = new System.Diagnostics.StackTrace(raiz, true);
+                    var f = st.GetFrame(0);
+                    if (f != null) donde = " [" + f.GetMethod()?.Name + (f.GetFileLineNumber() > 0 ? ", línea " + f.GetFileLineNumber() : "") + "]";
+                }
+                catch { }
+                doc.Editor.WriteMessage("\nError en VISIBILIDAD: " + raiz.GetType().Name + ": " + raiz.Message + donde);
             }
         }
 

@@ -168,6 +168,7 @@ namespace VisibilidadParada.Civil
 
         private void ActualizarRango()
         {
+            if (cbAlineamiento == null || cbPerfil == null || txtInicio == null) return;
             if (!(cbAlineamiento.SelectedItem is ObjetoDibujo a) || !(cbPerfil.SelectedItem is ObjetoDibujo p)) return;
             try
             {
@@ -188,16 +189,24 @@ namespace VisibilidadParada.Civil
         }
 
         // ------------------------------------------------------------------ eventos de selección
+        // Nota: los manejadores enlazados desde el XAML pueden dispararse durante InitializeComponent,
+        // antes de que existan los controles declarados más abajo. Por eso comprueban null.
         private void Alineamiento_Changed(object sender, SelectionChangedEventArgs e)
         {
+            if (cbPerfil == null) return;
             var idAl = cbAlineamiento.SelectedItem is ObjetoDibujo o ? o.Id : ObjectId.Null;
             CargarPerfiles(idAl, ObjectId.Null);
         }
 
-        private void Perfil_Changed(object sender, SelectionChangedEventArgs e) => ActualizarRango();
+        private void Perfil_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            if (txtInicio == null || txtFin == null || txtEstado == null) return;
+            ActualizarRango();
+        }
 
         private void Todo_Changed(object sender, RoutedEventArgs e)
         {
+            if (txtInicio == null || txtFin == null) return;
             bool todo = chkTodo.IsChecked == true;
             txtInicio.IsEnabled = !todo;
             txtFin.IsEnabled = !todo;
@@ -205,6 +214,7 @@ namespace VisibilidadParada.Civil
 
         private void Tramos_Changed(object sender, RoutedEventArgs e)
         {
+            if (txtArchivoTramos == null || btnArchivoTramos == null || txtTramosInfo == null) return;
             bool usar = chkTramos.IsChecked == true;
             txtArchivoTramos.IsEnabled = usar;
             btnArchivoTramos.IsEnabled = usar;
@@ -213,6 +223,7 @@ namespace VisibilidadParada.Civil
 
         private void Superficie_Changed(object sender, RoutedEventArgs e)
         {
+            if (pnlSuperficie == null) return;
             pnlSuperficie.IsEnabled = chkSuperficie.IsChecked == true;
         }
 
