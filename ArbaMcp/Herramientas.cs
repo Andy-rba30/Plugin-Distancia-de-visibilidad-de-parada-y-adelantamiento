@@ -36,8 +36,8 @@ namespace ArbaMcp
     }
 
     /// <summary>
-    /// Registro de herramientas expuestas por MCP. Otros plugins de la pestaÃ±a ARBA pueden llamar a
-    /// Herramientas.Registrar(...) desde su Initialize para aÃ±adir las suyas.
+    /// Registro de herramientas expuestas por MCP. Otros plugins de la pestaña ARBA pueden llamar a
+    /// Herramientas.Registrar(...) desde su Initialize para añadir las suyas.
     /// </summary>
     public static class Herramientas
     {
@@ -83,7 +83,7 @@ namespace ArbaMcp
             var v = a.GetProperty(n);
             if (v.ValueKind == JsonValueKind.Number) return v.GetDouble();
             if (v.ValueKind == JsonValueKind.String && double.TryParse(v.GetString().Replace(',', '.'), NumberStyles.Float, Inv, out double d)) return d;
-            throw new ArgumentException("El parÃ¡metro '" + n + "' debe ser numÃ©rico.");
+            throw new ArgumentException("El parámetro '" + n + "' debe ser numérico.");
         }
 
         private static bool Bool(JsonElement a, string n, bool def)
@@ -92,7 +92,7 @@ namespace ArbaMcp
             var v = a.GetProperty(n);
             if (v.ValueKind == JsonValueKind.True) return true;
             if (v.ValueKind == JsonValueKind.False) return false;
-            if (v.ValueKind == JsonValueKind.String) return v.GetString().Trim().ToLowerInvariant() is "1" or "si" or "sÃ­" or "true" or "yes";
+            if (v.ValueKind == JsonValueKind.String) return v.GetString().Trim().ToLowerInvariant() is "1" or "si" or "sí" or "true" or "yes";
             if (v.ValueKind == JsonValueKind.Number) return v.GetDouble() != 0;
             return def;
         }
@@ -100,7 +100,7 @@ namespace ArbaMcp
         private static string Requerido(JsonElement a, string n)
         {
             string s = Str(a, n);
-            if (string.IsNullOrWhiteSpace(s)) throw new ArgumentException("Falta el parÃ¡metro obligatorio '" + n + "'.");
+            if (string.IsNullOrWhiteSpace(s)) throw new ArgumentException("Falta el parámetro obligatorio '" + n + "'.");
             return s;
         }
 
@@ -110,7 +110,7 @@ namespace ArbaMcp
         private static Document DocActivo()
         {
             var doc = AcApp.DocumentManager.MdiActiveDocument;
-            if (doc == null) throw new InvalidOperationException("No hay ningÃºn dibujo abierto en Civil 3D.");
+            if (doc == null) throw new InvalidOperationException("No hay ningún dibujo abierto en Civil 3D.");
             return doc;
         }
 
@@ -145,7 +145,7 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "ping",
-                Descripcion = "Comprueba que el plugin responde. Devuelve versiÃ³n, dibujo activo y hora.",
+                Descripcion = "Comprueba que el plugin responde. Devuelve versión, dibujo activo y hora.",
                 Ejecutar = a =>
                 {
                     var doc = AcApp.DocumentManager.MdiActiveDocument;
@@ -198,7 +198,7 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "listar_perfiles",
-                Descripcion = "Lista los perfiles de un alineamiento: nombre, tipo (EG terreno, FG rasante), progresivas y nÃºmero de PVI.",
+                Descripcion = "Lista los perfiles de un alineamiento: nombre, tipo (EG terreno, FG rasante), progresivas y número de PVI.",
                 Parametros = { P("alineamiento", "string", "Nombre del alineamiento", true) },
                 Ejecutar = a =>
                 {
@@ -268,22 +268,27 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "ejecutar_comando",
-                Descripcion = "Envía un comando a la línea de comandos del dibujo activo de forma síncrona. Retorna cuando termina o falla (tiempo límite 60s).",
-                Parametros = { P("comando", "string", "Texto del comando, por ejemplo 'REGEN' o '_.ZOOM E'", true) },
+                Descripcion = "Envía un comando a la línea de comandos del dibujo activo y espera a que termine. Devuelve 'terminado', 'cancelado', 'fallido', 'el comando no se inició' o 'timeout con ESC'. Cada orden va en un grupo de UNDO (un solo Ctrl+Z la revierte).",
+                Parametros =
+                {
+                    P("comando", "string", "Texto del comando, por ejemplo 'REGEN' o '_.ZOOM E'", true),
+                    P("timeout_s", "number", "Segundos máximos de espera (por defecto 60). Si se agota, se envían dos ESC para cancelar")
+                },
                 EjecutarAsync = async a =>
                 {
                     string comando = Requerido(a, "comando").Trim();
+                    int timeoutMs = (int)(Math.Max(1, Num(a, "timeout_s", 60)) * 1000);
                     var tcs = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
                     
                     string cmdParse = comando.Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "";
                     cmdParse = cmdParse.TrimStart('_', '.').ToUpperInvariant();
 
                     Document doc = DocActivo();
-                    bool started = false;
+                    int iniciado = 0; // se escribe en el hilo principal y se lee en el del servidor
 
                     void OnCommandWillStart(object s, CommandEventArgs e)
                     {
-                        if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) started = true;
+                        if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) System.Threading.Interlocked.Exchange(ref iniciado, 1);
                     }
                     void OnCommandEnded(object s, CommandEventArgs e)
                     {
@@ -310,10 +315,8 @@ namespace ArbaMcp
                     await HiloPrincipal.Ejecutar(() =>
                     {
                         try {
-                            if (Convert.ToInt32(AcApp.GetSystemVariable("CMDACTIVE")) > 0) {
-                                tcs.TrySetResult(new { ok = false, error = "hay un comando activo en Civil 3D" });
-                                return true;
-                            }
+                            if (Convert.ToInt32(AcApp.GetSystemVariable("CMDACTIVE")) > 0)
+                                throw new InvalidOperationException("Hay un comando activo en Civil 3D; termínalo o cancélalo antes de enviar otro.");
                             
                             doc.CommandWillStart += OnCommandWillStart;
                             doc.CommandEnded += OnCommandEnded;
@@ -327,10 +330,10 @@ namespace ArbaMcp
 
                     for (int i = 0; i < 30; i++) {
                         if (tcs.Task.IsCompleted) break;
-                        if (started) break;
+                        if (System.Threading.Volatile.Read(ref iniciado) == 1) break;
                         await Task.Delay(100);
                     }
-                    if (!started && !tcs.Task.IsCompleted) {
+                    if (System.Threading.Volatile.Read(ref iniciado) == 0 && !tcs.Task.IsCompleted) {
                         await HiloPrincipal.Ejecutar(() => {
                             doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
                             tcs.TrySetResult("el comando no se inició (¿nombre incorrecto?)");
@@ -338,7 +341,7 @@ namespace ArbaMcp
                         });
                     }
 
-                    var completada = await Task.WhenAny(tcs.Task, Task.Delay(60000));
+                    var completada = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
                     
                     await HiloPrincipal.Ejecutar(() =>
                     {
@@ -361,15 +364,15 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "leer_historial",
-                Descripcion = "Devuelve las Ãºltimas lÃ­neas del historial del plugin: comandos iniciados y terminados, llamadas MCP y mensajes.",
-                Parametros = { P("ultimas_n", "number", "Cantidad de lÃ­neas (por defecto 50)") },
+                Descripcion = "Devuelve las últimas líneas del historial del plugin: comandos iniciados y terminados, llamadas MCP y mensajes.",
+                Parametros = { P("ultimas_n", "number", "Cantidad de líneas (por defecto 50)") },
                 Ejecutar = a => Historial.Ultimas((int)Num(a, "ultimas_n", 50))
             });
 
             Registrar(new Herramienta
             {
                 Nombre = "capturar_pantalla",
-                Descripcion = "Guarda una captura PNG de la ventana principal de Civil 3D (incluye cuadros de diÃ¡logo abiertos) y devuelve la ruta.",
+                Descripcion = "Guarda una captura PNG de la ventana principal de Civil 3D (incluye cuadros de diálogo abiertos) y devuelve la ruta.",
                 Parametros = { P("ruta", "string", "Ruta del PNG a crear (por defecto en la carpeta temporal)") },
                 Ejecutar = a =>
                 {
@@ -377,7 +380,7 @@ namespace ArbaMcp
                     if (string.IsNullOrWhiteSpace(ruta))
                         ruta = Path.Combine(Path.GetTempPath(), "arba_captura_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png");
                     var h = AcApp.MainWindow.Handle;
-                    if (!GetWindowRect(h, out RECT r)) throw new InvalidOperationException("No se pudo obtener el rectÃ¡ngulo de la ventana.");
+                    if (!GetWindowRect(h, out RECT r)) throw new InvalidOperationException("No se pudo obtener el rectángulo de la ventana.");
                     int w = Math.Max(1, r.Right - r.Left), alto = Math.Max(1, r.Bottom - r.Top);
                     using (var bmp = new Bitmap(w, alto))
                     using (var g = Graphics.FromImage(bmp))
@@ -393,13 +396,13 @@ namespace ArbaMcp
             RegistrarAdicionales();
         }
 
-        // ------------------------------------------------------------------ herramientas genÃ©ricas adicionales
+        // ------------------------------------------------------------------ herramientas genéricas adicionales
         private static void RegistrarAdicionales()
         {
             Registrar(new Herramienta
             {
                 Nombre = "listar_pvis",
-                Descripcion = "Devuelve la geometrÃ­a vertical de un perfil: cada PVI con progresiva, cota, pendientes de entrada y salida, y la curva vertical que lo contiene (tipo y longitud) si existe.",
+                Descripcion = "Devuelve la geometría vertical de un perfil: cada PVI con progresiva, cota, pendientes de entrada y salida, y la curva vertical que lo contiene (tipo y longitud) si existe.",
                 Parametros =
                 {
                     P("alineamiento", "string", "Nombre del alineamiento", true),

@@ -6,3 +6,8 @@ obj/
 .vs/
 *.dll
 *.pdb
+
+# Python (PuenteMcp)
+.venv/
+__pycache__/
+*.pyc
