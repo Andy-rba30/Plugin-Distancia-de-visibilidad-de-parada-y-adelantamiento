@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +15,11 @@ using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace ArbaMcp
 {
     /// <summary>
-    /// Servidor HTTP mínimo (sin http.sys, sin permisos de administrador) que escucha solo en 127.0.0.1.
+    /// Servidor HTTP mÃ­nimo (sin http.sys, sin permisos de administrador) que escucha solo en 127.0.0.1.
     /// Contrato:
-    ///   GET  /tools                 → lista de herramientas con parámetros
-    ///   GET  /ping                  → estado
-    ///   POST /execute {tool, args}  → {"ok":true,"result":...} o {"ok":false,"error":"..."}
+    ///   GET  /tools                 â†’ lista de herramientas con parÃ¡metros
+    ///   GET  /ping                  â†’ estado
+    ///   POST /execute {tool, args}  â†’ {"ok":true,"result":...} o {"ok":false,"error":"..."}
     /// Puerto: variable de entorno ARBA_MCP_PORT (por defecto 8765). ARBA_MCP=0 desactiva el servidor.
     /// </summary>
     internal static class Servidor
@@ -118,13 +118,13 @@ namespace ArbaMcp
                         if (n <= 0) return;
                         acumulado.Write(tmp, 0, n);
                         finCab = Buscar(acumulado.GetBuffer(), (int)acumulado.Length, "\r\n\r\n");
-                        if (acumulado.Length > 1 << 20) { await Responder(ns, 413, Error("Petición demasiado grande")); return; }
+                        if (acumulado.Length > 1 << 20) { await Responder(ns, 413, Error("PeticiÃ³n demasiado grande")); return; }
                     }
 
                     string cabeceras = Encoding.ASCII.GetString(acumulado.GetBuffer(), 0, finCab);
                     var lineas = cabeceras.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
                     var partes = lineas[0].Split(' ');
-                    if (partes.Length < 2) { await Responder(ns, 400, Error("Petición inválida")); return; }
+                    if (partes.Length < 2) { await Responder(ns, 400, Error("PeticiÃ³n invÃ¡lida")); return; }
                     string metodo = partes[0].ToUpperInvariant();
                     string ruta = partes[1];
                     int qs = ruta.IndexOf('?');
@@ -202,27 +202,33 @@ namespace ArbaMcp
                     if (raiz.TryGetProperty("timeout_s", out var to) && to.TryGetInt32(out int ts) && ts > 0) timeoutS = ts;
                 }
             }
-            catch (System.Exception ex) { return Error("JSON inválido: " + ex.Message); }
+            catch (System.Exception ex) { return Error("JSON invÃ¡lido: " + ex.Message); }
 
             var herramienta = Herramientas.Buscar(nombre);
             if (herramienta == null) return Error("Herramienta desconocida: '" + nombre + "'. Consulta GET /tools.");
 
-            Historial.Registrar("MCP → " + nombre);
+            Historial.Registrar("MCP â†’ " + nombre);
             var reloj = System.Diagnostics.Stopwatch.StartNew();
             try
             {
-                var tarea = HiloPrincipal.Ejecutar(() => herramienta.Ejecutar(args));
-                var terminada = await Task.WhenAny(tarea, Task.Delay(TimeSpan.FromSeconds(timeoutS)));
-                if (terminada != tarea)
+                                Task<object> tareaPrincipal;
+                if (herramienta.EjecutarAsync != null) {
+                    tareaPrincipal = herramienta.EjecutarAsync(args);
+                } else {
+                    tareaPrincipal = HiloPrincipal.Ejecutar(() => herramienta.Ejecutar(args));
+                }
+
+                var terminada = await Task.WhenAny(tareaPrincipal, Task.Delay(TimeSpan.FromSeconds(timeoutS)));
+                if (terminada != tareaPrincipal)
                     return Error("Tiempo agotado (" + timeoutS + " s). Civil 3D puede estar ocupado o con un cuadro de diálogo abierto.");
-                object resultado = await tarea;
-                Historial.Registrar("MCP ← " + nombre + " OK (" + reloj.ElapsedMilliseconds + " ms)");
+                object resultado = await tareaPrincipal;
+                Historial.Registrar("MCP ✓ " + nombre + " OK (" + reloj.ElapsedMilliseconds + " ms)");
                 return JsonSerializer.Serialize(new { ok = true, tool = nombre, ms = reloj.ElapsedMilliseconds, result = resultado }, Json);
             }
             catch (System.Exception ex)
             {
                 var raiz = ex; while (raiz.InnerException != null) raiz = raiz.InnerException;
-                Historial.Registrar("MCP ← " + nombre + " ERROR: " + raiz.Message);
+                Historial.Registrar("MCP â† " + nombre + " ERROR: " + raiz.Message + " " + raiz.StackTrace);
                 return Error(raiz.GetType().Name + ": " + raiz.Message);
             }
         }
@@ -296,7 +302,8 @@ namespace ArbaMcp
             d.CommandWillStart += (s, e) => Registrar("Comando inicia: " + e.GlobalCommandName);
             d.CommandEnded += (s, e) => Registrar("Comando termina: " + e.GlobalCommandName);
             d.CommandCancelled += (s, e) => Registrar("Comando cancelado: " + e.GlobalCommandName);
-            d.CommandFailed += (s, e) => Registrar("Comando falló: " + e.GlobalCommandName);
+            d.CommandFailed += (s, e) => Registrar("Comando fallÃ³: " + e.GlobalCommandName);
         }
     }
 }
+
