@@ -80,11 +80,10 @@ namespace VisibilidadParada.Civil
                 if (t.Id == IdPestana || string.Equals(t.Title, TituloPestana, StringComparison.OrdinalIgnoreCase))
                     return t;
 
+            // Se agrega al final de la cinta y no se activa: las pestañas propias de Civil 3D
+            // son las de uso diario; ARBA es para herramientas puntuales.
             var pestana = new RibbonTab { Id = IdPestana, Title = TituloPestana, Name = TituloPestana, IsVisible = true };
-            if (cinta.Tabs.Count > 1)
-                cinta.Tabs.Insert(1, pestana);
-            else
-                cinta.Tabs.Add(pestana);
+            cinta.Tabs.Add(pestana);
             return pestana;
         }
 
@@ -157,12 +156,6 @@ namespace VisibilidadParada.Civil
                 AgregarBoton(panel, "ARBA_VISPARADA", "Visibilidad\nde parada", "VISPARADA",
                     "Verifica la DVP en cada progresiva del eje contra la superficie del corredor, además de las curvas verticales.",
                     ColorVisibilidad, "Dp");
-
-                var pestana = ObtenerPestana();
-                if (pestana != null)
-                {
-                    pestana.IsActive = true;
-                }
             }
             catch (System.Exception ex)
             {
