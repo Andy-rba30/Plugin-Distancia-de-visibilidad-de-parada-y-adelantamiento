@@ -149,14 +149,48 @@ namespace ArbaMcp
                 ShowImage = true,
                 Size = RibbonItemSize.Large,
                 Orientation = System.Windows.Controls.Orientation.Vertical,
-                Image = Icono(letrasIcono, colorIcono, 16),
-                LargeImage = Icono(letrasIcono, colorIcono, 32),
+                Image = IconoDesdeRecurso(id, 16) ?? Icono(letrasIcono, colorIcono, 16),
+                LargeImage = IconoDesdeRecurso(id, 32) ?? Icono(letrasIcono, colorIcono, 32),
                 CommandParameter = comando,
                 CommandHandler = new ComandoCinta(comando),
             };
             boton.ToolTip = new RibbonToolTip { Title = texto.Replace("\n", " "), Command = comando, Content = descripcion, IsHelpEnabled = false };
             panel.Source.Items.Add(boton);
             return boton;
+        }
+
+        /// <summary>
+        /// Busca un PNG incrustado en la DLL para el botón: Recursos\{id}.png (32 px) y, opcionalmente,
+        /// Recursos\{id}_16.png. Si no existe, se devuelve null y se usa el icono generado con letras.
+        /// </summary>
+        private static BitmapSource IconoDesdeRecurso(string id, int tam)
+        {
+            try
+            {
+                var asm = typeof(CintaArba).Assembly;
+                string sufijo16 = "." + id + "_16.png";
+                string sufijo = "." + id + ".png";
+                string nombre = null;
+                foreach (var r in asm.GetManifestResourceNames())
+                {
+                    if (tam <= 16 && r.EndsWith(sufijo16, StringComparison.OrdinalIgnoreCase)) { nombre = r; break; }
+                    if (r.EndsWith(sufijo, StringComparison.OrdinalIgnoreCase)) nombre = r;
+                }
+                if (nombre == null) return null;
+                using (var st = asm.GetManifestResourceStream(nombre))
+                {
+                    if (st == null) return null;
+                    var bmp = new BitmapImage();
+                    bmp.BeginInit();
+                    bmp.CacheOption = BitmapCacheOption.OnLoad;
+                    bmp.StreamSource = st;
+                    bmp.DecodePixelWidth = tam;
+                    bmp.EndInit();
+                    bmp.Freeze();
+                    return bmp;
+                }
+            }
+            catch { return null; }
         }
 
         private static BitmapSource Icono(string letras, Color fondo, int tam)

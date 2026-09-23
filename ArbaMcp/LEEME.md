@@ -22,6 +22,10 @@ curl.exe http://127.0.0.1:8765/tools
 curl.exe -X POST http://127.0.0.1:8765/execute -H "Content-Type: application/json" -d "{\"tool\":\"listar_alineamientos\"}"
 ```
 
+## Icono del botón
+
+Copia el PNG de tu icono a `Recursos\ARBA_BTN_MCP.png` (32×32) y recompila. Ver `Recursos\LEEME.md`.
+
 ## Configurar
 
 - `ARBA_MCP_PORT`: puerto (por defecto 8765).

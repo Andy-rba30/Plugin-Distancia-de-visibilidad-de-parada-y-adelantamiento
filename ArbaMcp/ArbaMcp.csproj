@@ -58,6 +58,8 @@
 
   <ItemGroup>
     <None Include="Bundle\PackageContents.xml" />
+    <!-- Iconos de los botones: Recursos\ARBA_BTN_MCP.png (32 px) y opcional Recursos\ARBA_BTN_MCP_16.png -->
+    <EmbeddedResource Include="Recursos\*.png" />
   </ItemGroup>
 
   <Target Name="InstalarBundle" AfterTargets="Build"
