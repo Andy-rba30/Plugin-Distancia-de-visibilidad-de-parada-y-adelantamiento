@@ -589,7 +589,9 @@ namespace VisibilidadParada.Civil
                 Estado = CurvasVerticales.EstadoTxt(c.Estado),
                 Da = F(c.Da, 0),
                 LDaReq = F(c.LDaReq, 0),
-                Adelanta = c.PermiteAdelantar == null ? "—" : c.PermiteAdelantar.Value ? "Sí" : "No",
+                Adelanta = !c.Convexa ? "No aplica (cóncava)"
+                         : c.PermiteAdelantar == null ? (d.P.DistanciaAdelanto > 0 || d.P.TramosVelocidad.Count > 0 ? "—" : "Da = 0: no evaluado")
+                         : c.PermiteAdelantar.Value ? "Sí" : "No",
                 Verificacion = c.Verificacion,
                 Cumple = c.Cumple
             }).ToList();

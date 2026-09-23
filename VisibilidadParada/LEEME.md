@@ -81,7 +81,7 @@ Desactivada por defecto. Al activarla se pide la superficie de obstrucción (cor
 
 **Resultados**
 
-Un recuadro verde (CUMPLE) o rojo (NO CUMPLE) con los motivos, y la tabla de curvas verticales: PVI, ubicación, tipo, V, Pe, Ps, A, Dp calculada, L mínima exigida, L de proyecto, K mínima y de proyecto, estado por visibilidad de parada, Da, L requerida por adelantamiento, si permite adelantar y el texto de la verificación (Lp contra Lmín y Kp contra Kmín). Las filas que no cumplen van en rojo. Si se activó la superficie, debajo aparece la tabla de sectores del eje sin visibilidad suficiente. Los botones *Abrir informe HTML* y *Abrir carpeta* llevan a los archivos generados.
+Un recuadro verde (CUMPLE) o rojo (NO CUMPLE) con los motivos, y la tabla de curvas verticales: PVI, ubicación, tipo, V, Pe, Ps, A, Dp calculada, L mínima exigida, L de proyecto, K mínima y de proyecto, estado por visibilidad de parada, Da, L requerida por adelantamiento, si permite adelantar y el texto de la verificación (Lp contra Lmín y Kp contra Kmín). Las filas que no cumplen van en rojo. Si se activó la superficie, debajo aparece la tabla de sectores del eje sin visibilidad suficiente. Los botones *Abrir informe HTML* y *Abrir carpeta* llevan a los archivos generados; el informe no se abre solo salvo que marques la casilla en General. El adelantamiento solo se evalúa en curvas convexas, como indica la DG-2018; en las cóncavas la tabla muestra "No aplica".
 
 **Comandos de línea**: `VISCURVAS` (solo curvas) y `VISPARADA` (curvas más superficie) piden los mismos datos uno por uno en la línea de comandos, sin valores por defecto, y generan los mismos informes. ESC cancela.
 
