@@ -45,7 +45,8 @@ namespace ArbaMcp
             if (Activo) return;
             if (Environment.GetEnvironmentVariable("ARBA_MCP") == "0") return;
 
-            TokenActual = Guid.NewGuid().ToString("N");
+            // 32 bytes del generador criptográfico, en hexadecimal (64 caracteres); un Guid no está pensado como secreto
+            TokenActual = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
             try {
                 string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ArbaMcp");
                 Directory.CreateDirectory(dir);

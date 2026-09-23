@@ -14,7 +14,7 @@ Toda petición debe cumplir estas reglas; si no, se rechaza antes de procesar na
 
 | Regla | Si falla |
 |---|---|
-| Cabecera `X-Arba-Token` con el token de la sesión. El plugin lo genera al iniciar y lo guarda en `%LOCALAPPDATA%\ArbaMcp\token` (permisos solo para tu usuario). Cambia en cada arranque de Civil 3D. Aplica a todas las rutas, `/ping` incluida | 401 |
+| Cabecera `X-Arba-Token` con el token de la sesión (32 bytes aleatorios del generador criptográfico, en hexadecimal). El plugin lo genera al iniciar y lo guarda en `%LOCALAPPDATA%\ArbaMcp\token` (permisos solo para tu usuario). Cambia en cada arranque de Civil 3D. Aplica a todas las rutas, `/ping` incluida | 401 |
 | Sin cabecera `Origin` (evita llamadas desde navegadores) | 403 |
 | Cabecera `Host` exactamente `127.0.0.1:<puerto>` o `localhost:<puerto>` | 400 |
 | En `POST`, `Content-Type: application/json` | 415 |
