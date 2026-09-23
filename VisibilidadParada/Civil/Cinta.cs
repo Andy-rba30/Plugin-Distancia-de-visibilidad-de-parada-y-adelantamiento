@@ -26,7 +26,10 @@ namespace VisibilidadParada.Civil
             if (ComponentManager.Ribbon != null)
                 CintaArba.CrearBotonesVisibilidad();
             else
+            {
                 ComponentManager.ItemInitialized += AlInicializarCinta;
+                AcApp.Idle += AlEstarInactivo;
+            }
 
             // Al cambiar de espacio de trabajo la cinta se reconstruye: se vuelve a crear la pestaña.
             AcApp.SystemVariableChanged += (s, e) =>
@@ -41,6 +44,15 @@ namespace VisibilidadParada.Civil
         private static void AlInicializarCinta(object sender, RibbonItemEventArgs e)
         {
             if (ComponentManager.Ribbon == null) return;
+            ComponentManager.ItemInitialized -= AlInicializarCinta;
+            AcApp.Idle -= AlEstarInactivo;
+            CintaArba.CrearBotonesVisibilidad();
+        }
+
+        private static void AlEstarInactivo(object sender, EventArgs e)
+        {
+            if (ComponentManager.Ribbon == null) return;
+            AcApp.Idle -= AlEstarInactivo;
             ComponentManager.ItemInitialized -= AlInicializarCinta;
             CintaArba.CrearBotonesVisibilidad();
         }
@@ -68,8 +80,11 @@ namespace VisibilidadParada.Civil
                 if (t.Id == IdPestana || string.Equals(t.Title, TituloPestana, StringComparison.OrdinalIgnoreCase))
                     return t;
 
-            var pestana = new RibbonTab { Id = IdPestana, Title = TituloPestana, Name = TituloPestana };
-            cinta.Tabs.Add(pestana);
+            var pestana = new RibbonTab { Id = IdPestana, Title = TituloPestana, Name = TituloPestana, IsVisible = true };
+            if (cinta.Tabs.Count > 1)
+                cinta.Tabs.Insert(1, pestana);
+            else
+                cinta.Tabs.Add(pestana);
             return pestana;
         }
 
@@ -142,6 +157,12 @@ namespace VisibilidadParada.Civil
                 AgregarBoton(panel, "ARBA_VISPARADA", "Visibilidad\nde parada", "VISPARADA",
                     "Verifica la DVP en cada progresiva del eje contra la superficie del corredor, además de las curvas verticales.",
                     ColorVisibilidad, "Dp");
+
+                var pestana = ObtenerPestana();
+                if (pestana != null)
+                {
+                    pestana.IsActive = true;
+                }
             }
             catch (System.Exception ex)
             {
