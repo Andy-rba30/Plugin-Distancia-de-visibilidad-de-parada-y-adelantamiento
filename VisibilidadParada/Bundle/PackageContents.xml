@@ -19,7 +19,6 @@
                     LoadOnRequest="True">
       <Commands GroupName="ARBA_VISIBILIDAD">
         <Command Global="VISIBILIDAD" Local="VISIBILIDAD" />
-        <Command Global="ARBAMCP" Local="ARBAMCP" />
         <Command Global="VISCURVAS" Local="VISCURVAS" />
         <Command Global="VISPARADA" Local="VISPARADA" />
       </Commands>

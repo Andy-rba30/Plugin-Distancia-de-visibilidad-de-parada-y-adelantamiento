@@ -85,10 +85,6 @@ Un recuadro verde (CUMPLE) o rojo (NO CUMPLE) con los motivos, y la tabla de cur
 
 **Comandos de línea**: `VISCURVAS` (solo curvas) y `VISPARADA` (curvas más superficie) piden los mismos datos uno por uno en la línea de comandos, sin valores por defecto, y generan los mismos informes. ESC cancela.
 
-## 3b. Servidor local para IA (MCP)
-
-Al cargarse, el plugin abre un servidor HTTP en `http://127.0.0.1:8765/` (puerto configurable con la variable de entorno `ARBA_MCP_PORT`; `ARBA_MCP=0` lo desactiva). Un puente MCP externo puede consultar `GET /tools` y ejecutar herramientas con `POST /execute`: listar alineamientos, perfiles y superficies, abrir dibujos, enviar comandos, leer el historial, capturar la pantalla y correr `analizar_visibilidad` con resultado en JSON. El comando `ARBAMCP` muestra el estado. El contrato completo está en `Mcp/CONTRATO.md`.
-
 ## 4. Qué calcula
 
 **Curvas verticales** (ambos comandos). Se leen del perfil los PVI (progresiva y cota) y las entidades no tangentes (inicio, fin y tipo). Para cada PVI interior:
@@ -146,11 +142,6 @@ Civil/    Conexión con Civil 3D
   VentanaVisibilidad.xaml/.cs  Cuadro de diálogo del comando VISIBILIDAD (selección, parámetros, resultados)
   Comando.cs      Comandos VISIBILIDAD (ventana), VISPARADA y VISCURVAS (línea de comandos)
   Cinta.cs        Pestaña ARBA de la cinta (compartible con otros plugins) y arranque del plugin
-Mcp/      Servidor local para el puente MCP
-  Servidor.cs     HTTP mínimo en 127.0.0.1 (GET /tools, POST /execute) e historial
-  HiloPrincipal.cs  Cola que ejecuta las herramientas en el hilo principal de AutoCAD
-  Herramientas.cs Registro de herramientas: ping, listar_*, abrir_dibujo, ejecutar_comando, leer_historial, capturar_pantalla, analizar_visibilidad
-  CONTRATO.md     Contrato para escribir el puente MCP
 Bundle/   PackageContents.xml para la carga automática (ApplicationPlugins)
 instalar.ps1  Compila e instala el paquete de carga automática
 ```

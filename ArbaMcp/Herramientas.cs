@@ -10,16 +10,14 @@ using System.Text.Json;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.Civil.ApplicationServices;
-using VisibilidadParada.Civil;
-using VisibilidadParada.Nucleo;
 using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using CivAlignment = Autodesk.Civil.DatabaseServices.Alignment;
 using CivProfile = Autodesk.Civil.DatabaseServices.Profile;
 using CivSurface = Autodesk.Civil.DatabaseServices.Surface;
 
-namespace VisibilidadParada.Mcp
+namespace ArbaMcp
 {
-    internal class Parametro
+    public class Parametro
     {
         public string name { get; set; }
         public string type { get; set; }          // string | number | boolean
@@ -27,7 +25,7 @@ namespace VisibilidadParada.Mcp
         public bool required { get; set; }
     }
 
-    internal class Herramienta
+    public class Herramienta
     {
         public string Nombre;
         public string Descripcion;
@@ -39,7 +37,7 @@ namespace VisibilidadParada.Mcp
     /// Registro de herramientas expuestas por MCP. Otros plugins de la pestaña ARBA pueden llamar a
     /// Herramientas.Registrar(...) desde su Initialize para añadir las suyas.
     /// </summary>
-    internal static class Herramientas
+    public static class Herramientas
     {
         private static readonly List<Herramienta> Lista = new List<Herramienta>();
         private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
@@ -153,7 +151,7 @@ namespace VisibilidadParada.Mcp
                     try { nombre = doc?.Database?.Filename; } catch { }
                     return new
                     {
-                        plugin = "VisibilidadParada",
+                        plugin = "ArbaMcp",
                         version = typeof(Herramientas).Assembly.GetName().Version?.ToString(),
                         puerto = Servidor.Puerto,
                         dibujo = nombre,
@@ -311,171 +309,82 @@ namespace VisibilidadParada.Mcp
                 }
             });
 
+            RegistrarAdicionales();
+        }
+
+        // ------------------------------------------------------------------ herramientas genéricas adicionales
+        private static void RegistrarAdicionales()
+        {
             Registrar(new Herramienta
             {
-                Nombre = "analizar_visibilidad",
-                Descripcion = "Verifica las curvas verticales de un perfil por visibilidad de parada y adelantamiento (DG-2018) y devuelve el veredicto CUMPLE / NO CUMPLE con la tabla completa. Si se indica una superficie, comprueba además la DVP a lo largo del eje. Escribe el informe HTML y los CSV.",
+                Nombre = "listar_pvis",
+                Descripcion = "Devuelve la geometría vertical de un perfil: cada PVI con progresiva, cota, pendientes de entrada y salida, y la curva vertical que lo contiene (tipo y longitud) si existe.",
                 Parametros =
                 {
                     P("alineamiento", "string", "Nombre del alineamiento", true),
-                    P("perfil", "string", "Nombre del perfil de rasante", true),
-                    P("superficie", "string", "Nombre de la superficie de obstrucción (opcional; activa la comprobación a lo largo del eje)"),
-                    P("velocidad", "number", "Velocidad de diseño km/h (por defecto 60)"),
-                    P("tp", "number", "Tiempo de percepción-reacción s (2.5)"),
-                    P("a", "number", "Desaceleración m/s² (3.4)"),
-                    P("altura_ojo", "number", "Altura del ojo m (1.07)"),
-                    P("altura_objeto", "number", "Altura del objeto m (0.15)"),
-                    P("criterio_longitud", "string", "'formula' (según caso Dp<L / Dp>L) o 'maximo' (la mayor de ambas)"),
-                    P("umbral_a", "number", "Diferencia algebraica % que exige curva (1)"),
-                    P("longitud_minima", "number", "Longitud mínima absoluta de curva m (0 = no aplicar). Referencia 0.6·V"),
-                    P("da", "number", "Distancia de visibilidad de adelantamiento m (0 = no evaluar). Tabla 205.03 DG-2018"),
-                    P("altura_objeto_da", "number", "Altura del objeto para adelantamiento m (1.30)"),
-                    P("inicio", "number", "Progresiva inicial del rango (opcional)"),
-                    P("fin", "number", "Progresiva final del rango (opcional)"),
-                    P("ruta_informe", "string", "Ruta del HTML a generar (por defecto junto al DWG)"),
-                    P("desfase_creciente", "number", "Solo con superficie: desfase del carril creciente m (1.65)"),
-                    P("desfase_decreciente", "number", "Solo con superficie: desfase del carril decreciente m (-1.65)"),
-                    P("intervalo", "number", "Solo con superficie: intervalo entre progresivas m (10)"),
-                    P("sentido", "string", "Solo con superficie: 'ambos', 'creciente' o 'decreciente'"),
-                    P("criterio_pendiente", "string", "Solo con superficie: 'desfavorable' o 'promedio'"),
-                    P("precision", "string", "Solo con superficie: 'normal', 'fina' o 'rapida'"),
-                    P("dibujar", "boolean", "Solo con superficie: dibujar sectores deficientes en planta (true)")
+                    P("perfil", "string", "Nombre del perfil", true)
                 },
-                Ejecutar = AnalizarVisibilidad
-            });
-        }
-
-        // ------------------------------------------------------------------ análisis
-        private static object AnalizarVisibilidad(JsonElement a)
-        {
-            var doc = DocActivo();
-            var o = new OpcionesAnalisis();
-            var par = o.P;
-
-            par.VelocidadDiseno = Num(a, "velocidad", 60);
-            par.TiempoPercepcion = Num(a, "tp", par.TiempoPercepcion);
-            par.Desaceleracion = Num(a, "a", par.Desaceleracion);
-            par.AlturaOjo = Num(a, "altura_ojo", par.AlturaOjo);
-            par.AlturaObjeto = Num(a, "altura_objeto", par.AlturaObjeto);
-            par.CriterioL = (Str(a, "criterio_longitud", "formula") ?? "formula").Trim().ToLowerInvariant().StartsWith("max") ? CriterioLongitud.Maximo : CriterioLongitud.Formula;
-            par.UmbralA = Num(a, "umbral_a", 1.0);
-            par.LongitudMinima = Num(a, "longitud_minima", 0);
-            par.DistanciaAdelanto = Num(a, "da", 0);
-            par.AlturaObjetoAdelanto = Num(a, "altura_objeto_da", par.AlturaObjetoAdelanto);
-            o.Inicio = Num(a, "inicio", double.NaN);
-            o.Fin = Num(a, "fin", double.NaN);
-
-            string superficie = Str(a, "superficie");
-            if (!string.IsNullOrWhiteSpace(superficie))
-            {
-                par.DesfaseCreciente = Num(a, "desfase_creciente", par.DesfaseCreciente);
-                par.DesfaseDecreciente = Num(a, "desfase_decreciente", par.DesfaseDecreciente);
-                par.Intervalo = Num(a, "intervalo", par.Intervalo);
-                string s = (Str(a, "sentido", "ambos") ?? "ambos").Trim().ToLowerInvariant();
-                par.Sentido = s.StartsWith("crec") ? SentidoAnalisis.Creciente : s.StartsWith("decr") ? SentidoAnalisis.Decreciente : SentidoAnalisis.Ambos;
-                par.Criterio = (Str(a, "criterio_pendiente", "desfavorable") ?? "").Trim().ToLowerInvariant().StartsWith("prom") ? CriterioPendiente.Promedio : CriterioPendiente.Desfavorable;
-                string pr = (Str(a, "precision", "normal") ?? "normal").Trim().ToLowerInvariant();
-                if (pr.StartsWith("fin")) { par.PasoMuestreo = 0.5; par.PasoBusqueda = 2.5; }
-                else if (pr.StartsWith("rap") || pr.StartsWith("ráp")) { par.PasoMuestreo = 2.0; par.PasoBusqueda = 10.0; }
-                else { par.PasoMuestreo = 1.0; par.PasoBusqueda = 5.0; }
-                par.Dibujar = Bool(a, "dibujar", true);
-            }
-
-            string ruta = Str(a, "ruta_informe");
-            if (string.IsNullOrWhiteSpace(ruta))
-            {
-                string dir = "";
-                try { dir = Path.GetDirectoryName(doc.Database.Filename) ?? ""; } catch { }
-                if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) dir = Path.GetTempPath();
-                ruta = Path.Combine(dir, "Informe_Visibilidad.html");
-            }
-            o.RutaHtml = ruta;
-
-            ResultadoEjecucion res;
-            using (doc.LockDocument())
-            {
-                using (var tr = doc.Database.TransactionManager.StartTransaction())
+                Ejecutar = a =>
                 {
-                    o.Alineamiento = BuscarAlineamiento(tr, Requerido(a, "alineamiento"));
-                    o.Perfil = BuscarPerfil(tr, o.Alineamiento, Requerido(a, "perfil"));
-                    if (!string.IsNullOrWhiteSpace(superficie)) o.Superficie = BuscarSuperficie(tr, superficie);
-                    tr.Commit();
-                }
-                res = Motor.Ejecutar(doc.Database, o, null, null);
-            }
-
-            if (res.Error != null) throw new InvalidOperationException(res.Error);
-            var d = res.Datos;
-            var v = Veredicto.De(d);
-
-            return new
-            {
-                veredicto = new
-                {
-                    cumple = v.Cumple,
-                    texto = v.Cumple ? "CUMPLE" : "NO CUMPLE",
-                    curvas_cumplen = v.CurvasCumplen,
-                    visibilidad_eje_cumple = v.VisibilidadCumple,
-                    motivos = v.Motivos
-                },
-                datos = new
-                {
-                    dibujo = d.Dibujo, eje = d.Eje, perfil = d.Perfil, superficie = string.IsNullOrEmpty(d.Superficie) ? null : d.Superficie,
-                    rango_inicio = N(d.SMin), rango_fin = N(d.SMax),
-                    velocidad = par.VelocidadDiseno, tp = par.TiempoPercepcion, a = par.Desaceleracion,
-                    altura_ojo = par.AlturaOjo, altura_objeto = par.AlturaObjeto,
-                    criterio_longitud = par.CriterioL.ToString().ToLowerInvariant(), umbral_a = par.UmbralA,
-                    longitud_minima = par.LongitudMinima, da = par.DistanciaAdelanto, altura_objeto_da = par.AlturaObjetoAdelanto,
-                    constante_convexa_parada = CurvasVerticales.ConstanteConvexa(par.AlturaOjo, par.AlturaObjeto),
-                    constante_convexa_adelanto = CurvasVerticales.ConstanteConvexa(par.AlturaOjo, par.AlturaObjetoAdelanto),
-                    duracion_s = Math.Round(d.Duracion.TotalSeconds, 2)
-                },
-                resumen = new
-                {
-                    pvi_analizados = d.Curvas.Count,
-                    cumplen = d.Curvas.Count(c => c.Cumple),
-                    curvas_cortas = d.Curvas.Count(c => c.Estado == EstadoCurva.NoCumple),
-                    sin_curva_requerida = d.Curvas.Count(c => c.Estado == EstadoCurva.SinCurvaRequerida)
-                },
-                curvas = d.Curvas.Select(c => new
-                {
-                    n = c.N,
-                    ubicacion = Formato.Prog(c.Progresiva),
-                    progresiva = N(c.Progresiva),
-                    tipo = c.Convexa ? "Convexa" : "Cóncava",
-                    v = c.V,
-                    pe_pct = N(c.Pe * 100), ps_pct = N(c.Ps * 100), a_pct = N(c.A),
-                    dp_ida_pe = N(c.DpIdaPe), dp_ida_ps = N(c.DpIdaPs), dp_reg_pe = N(c.DpRegPe), dp_reg_ps = N(c.DpRegPs),
-                    dp = N(c.Dp),
-                    l_calc_dp_mayor_l = N(c.LDpMayor), l_calc_dp_menor_l = N(c.LDpMenor),
-                    l_visibilidad = N(c.LVisibilidad), l_confort = N(c.LConfort),
-                    l_min_exigida = N(c.LReq), k_min = N(c.KReq),
-                    tiene_curva = c.TieneCurva, tipo_entidad = c.TipoEntidad,
-                    l_proyecto = N(c.LProyecto), k_proyecto = N(c.KProyecto),
-                    estado = CurvasVerticales.EstadoTxt(c.Estado),
-                    cumple = c.Cumple,
-                    verificacion = c.Verificacion,
-                    da = N(c.Da), l_calc_da_mayor_l = N(c.LDaMayor), l_calc_da_menor_l = N(c.LDaMenor), l_req_adelanto = N(c.LDaReq),
-                    permite_adelantar = c.PermiteAdelantar,
-                    nota = c.Nota
-                }).ToList(),
-                eje = d.Resultados == null ? null : new
-                {
-                    puntos_evaluados = d.Resultados.Count,
-                    cumplen = d.Resultados.Count(r => r.Estado == EstadoPunto.Cumple),
-                    no_cumplen = d.Resultados.Count(r => r.Estado == EstadoPunto.NoCumple),
-                    no_evaluables = d.Resultados.Count(r => r.Estado == EstadoPunto.NoEvaluable),
-                    muestras_fuera_superficie = d.MuestrasFuera,
-                    sectores = d.Sectores.Select(s => new
+                    var doc = DocActivo();
+                    var lista = new List<object>();
+                    using (doc.LockDocument())
+                    using (var tr = doc.Database.TransactionManager.StartTransaction())
                     {
-                        sentido = Formato.SentidoTxt(s.Sentido),
-                        inicio = Formato.Prog(s.Inicio), fin = Formato.Prog(s.Fin),
-                        longitud = N(s.Fin - s.Inicio), dvp_max = N(s.DvpMax),
-                        disponible_min = N(s.DisponibleMin), deficit_max = N(s.DeficitMax)
-                    }).ToList()
-                },
-                archivos = new { html = res.RutaHtml, csv_curvas = res.RutaCsvCurvas, csv_progresivas = string.IsNullOrEmpty(res.RutaCsvPuntos) ? null : res.RutaCsvPuntos }
-            };
+                        var idAl = BuscarAlineamiento(tr, Requerido(a, "alineamiento"));
+                        var idPr = BuscarPerfil(tr, idAl, Requerido(a, "perfil"));
+                        var pr = (CivProfile)tr.GetObject(idPr, OpenMode.ForRead);
+
+                        var curvas = new List<(double ini, double fin, string tipo)>();
+                        foreach (Autodesk.Civil.DatabaseServices.ProfileEntity ent in pr.Entities)
+                        {
+                            string tipo = ent.EntityType.ToString();
+                            if (tipo.IndexOf("Tangent", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+                            curvas.Add((ent.StartStation, ent.EndStation, tipo));
+                        }
+
+                        var pvis = new List<(double s, double z)>();
+                        foreach (Autodesk.Civil.DatabaseServices.ProfilePVI pvi in pr.PVIs) pvis.Add((pvi.Station, pvi.Elevation));
+                        pvis.Sort((x, y) => x.s.CompareTo(y.s));
+
+                        for (int i = 0; i < pvis.Count; i++)
+                        {
+                            double? pe = i > 0 && pvis[i].s - pvis[i - 1].s > 1e-6 ? (pvis[i].z - pvis[i - 1].z) / (pvis[i].s - pvis[i - 1].s) * 100 : (double?)null;
+                            double? ps = i < pvis.Count - 1 && pvis[i + 1].s - pvis[i].s > 1e-6 ? (pvis[i + 1].z - pvis[i].z) / (pvis[i + 1].s - pvis[i].s) * 100 : (double?)null;
+                            string tipoCurva = null; double? lCurva = null;
+                            foreach (var c in curvas)
+                                if (pvis[i].s > c.ini + 1e-4 && pvis[i].s < c.fin - 1e-4) { tipoCurva = c.tipo; lCurva = c.fin - c.ini; break; }
+                            lista.Add(new
+                            {
+                                n = i + 1,
+                                progresiva = N(pvis[i].s),
+                                cota = N(pvis[i].z),
+                                pe_pct = pe.HasValue ? N(pe.Value) : null,
+                                ps_pct = ps.HasValue ? N(ps.Value) : null,
+                                a_pct = pe.HasValue && ps.HasValue ? N(Math.Abs(ps.Value - pe.Value)) : null,
+                                tiene_curva = tipoCurva != null,
+                                tipo_curva = tipoCurva,
+                                longitud_curva = lCurva.HasValue ? N(lCurva.Value) : null
+                            });
+                        }
+                        tr.Commit();
+                    }
+                    return lista;
+                }
+            });
+
+            Registrar(new Herramienta
+            {
+                Nombre = "leer_variable",
+                Descripcion = "Lee una variable de sistema de AutoCAD (por ejemplo DWGNAME, CMDACTIVE, INSUNITS, SECURELOAD).",
+                Parametros = { P("nombre", "string", "Nombre de la variable de sistema", true) },
+                Ejecutar = a =>
+                {
+                    string n = Requerido(a, "nombre");
+                    object v = AcApp.GetSystemVariable(n);
+                    return new { variable = n.ToUpperInvariant(), valor = v?.ToString(), tipo = v?.GetType().Name };
+                }
+            });
         }
 
         // ------------------------------------------------------------------ Win32

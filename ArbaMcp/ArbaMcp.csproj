@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Conector Civil 3D 2027 (.NET 10) ↔ agente de IA por MCP. Requiere Visual Studio 2026. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputType>Library</OutputType>
+    <AssemblyName>ArbaMcp</AssemblyName>
+    <RootNamespace>ArbaMcp</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!-- Ajuste esta ruta si Civil 3D está instalado en otra carpeta -->
+  <PropertyGroup>
+    <C3DPath>C:\Program Files\Autodesk\AutoCAD 2027</C3DPath>
+  </PropertyGroup>
+
+  <!-- Al compilar, copia la DLL y PackageContents.xml al paquete de carga automática -->
+  <PropertyGroup>
+    <InstalarEnBundle>true</InstalarEnBundle>
+    <CarpetaBundle>$(APPDATA)\Autodesk\ApplicationPlugins\ArbaMcp.bundle</CarpetaBundle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="accoremgd">
+      <HintPath>$(C3DPath)\accoremgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acdbmgd">
+      <HintPath>$(C3DPath)\acdbmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acmgd">
+      <HintPath>$(C3DPath)\acmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AecBaseMgd">
+      <HintPath>$(C3DPath)\ACA\AecBaseMgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AeccDbMgd">
+      <HintPath>$(C3DPath)\C3D\AeccDbMgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>$(C3DPath)\AdWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Bundle\PackageContents.xml" />
+  </ItemGroup>
+
+  <Target Name="InstalarBundle" AfterTargets="Build"
+          Condition="'$(InstalarEnBundle)' == 'true' And '$(OS)' == 'Windows_NT'">
+    <MakeDir Directories="$(CarpetaBundle)\Contents" ContinueOnError="true" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\Bundle\PackageContents.xml" DestinationFolder="$(CarpetaBundle)" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(CarpetaBundle)\Contents" ContinueOnError="true" />
+    <Message Importance="high" Text="ArbaMcp instalado en $(CarpetaBundle). Si Civil 3D estaba abierto, reinícialo." />
+  </Target>
+
+</Project>

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Autodesk.AutoCAD.ApplicationServices;
 using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
-namespace VisibilidadParada.Mcp
+namespace ArbaMcp
 {
     /// <summary>
     /// Servidor HTTP mínimo (sin http.sys, sin permisos de administrador) que escucha solo en 127.0.0.1.
@@ -139,7 +139,7 @@ namespace VisibilidadParada.Mcp
                     }
                     if (metodo == "GET" && (ruta == "/ping" || ruta == "/"))
                     {
-                        await Responder(ns, 200, JsonSerializer.Serialize(new { ok = true, servidor = "VisibilidadParada MCP", puerto = Puerto }, Json));
+                        await Responder(ns, 200, JsonSerializer.Serialize(new { ok = true, servidor = "ArbaMcp", puerto = Puerto }, Json));
                         return;
                     }
                     if (metodo == "POST" && (ruta == "/execute" || ruta == "/execute/"))

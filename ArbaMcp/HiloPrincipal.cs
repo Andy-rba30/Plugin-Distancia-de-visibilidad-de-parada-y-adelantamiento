@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
-namespace VisibilidadParada.Mcp
+namespace ArbaMcp
 {
     /// <summary>
     /// Cola de trabajos que se ejecutan en el hilo principal de AutoCAD (evento Idle).
