@@ -81,6 +81,44 @@ namespace VisibilidadParada.Civil
             RutaPorDefecto();
         }
 
+        // ------------------------------------------------------------------ valores de la norma
+        // Tabla 205.03 DG-2018: distancia de visibilidad de adelantamiento (m) según velocidad de diseño (km/h)
+        private static readonly double[] TablaV = { 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130 };
+        private static readonly double[] TablaDa = { 130, 200, 270, 345, 410, 485, 540, 615, 670, 730, 775, 815 };
+
+        /// <summary>Da de la Tabla 205.03 para la velocidad dada (interpola entre valores tabulados).</summary>
+        public static double DaSegunNorma(double v)
+        {
+            if (v <= TablaV[0]) return TablaDa[0];
+            int n = TablaV.Length;
+            if (v >= TablaV[n - 1]) return TablaDa[n - 1];
+            for (int i = 1; i < n; i++)
+                if (v <= TablaV[i])
+                {
+                    double t = (v - TablaV[i - 1]) / (TablaV[i] - TablaV[i - 1]);
+                    return TablaDa[i - 1] + t * (TablaDa[i] - TablaDa[i - 1]);
+                }
+            return TablaDa[n - 1];
+        }
+
+        /// <summary>Longitud mínima absoluta de curva vertical de referencia: 0.6·V (AASHTO), en metros.</summary>
+        public static double LMinimaSegunNorma(double v) => Math.Ceiling(0.6 * v);
+
+        private void SugerirSegunV(double v)
+        {
+            txtUmbralA.Text = "1";
+            txtLMin.Text = Num(LMinimaSegunNorma(v));
+            txtDa.Text = Num(Math.Round(DaSegunNorma(v)));
+        }
+
+        private void Sugerir_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Leer(txtV, "Velocidad de diseño", out double v)) return;
+            SugerirSegunV(v);
+            txtEstado.Text = "Para V = " + Num(v) + " km/h: A ≥ 1 % (pavimentada), L mínima = 0.6·V = " + txtLMin.Text +
+                             " m, Da = " + txtDa.Text + " m (Tabla 205.03). Ajusta según tu tipo de vía.";
+        }
+
         // ------------------------------------------------------------------ carga inicial
         private void ValoresPorDefecto()
         {
@@ -90,9 +128,7 @@ namespace VisibilidadParada.Civil
             txtA.Text = Num(p.Desaceleracion);
             txtOjo.Text = Num(p.AlturaOjo);
             txtObjeto.Text = Num(p.AlturaObjeto);
-            txtUmbralA.Text = Num(p.UmbralA);
-            txtLMin.Text = "0";
-            txtDa.Text = "0";
+            SugerirSegunV(60);
             txtObjetoDa.Text = Num(p.AlturaObjetoAdelanto);
             txtDesfC.Text = Num(p.DesfaseCreciente);
             txtDesfD.Text = Num(p.DesfaseDecreciente);

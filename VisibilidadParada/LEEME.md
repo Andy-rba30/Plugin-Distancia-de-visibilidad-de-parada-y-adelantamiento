@@ -73,7 +73,7 @@ Pulsa el botón de la pestaña ARBA o escribe `VISIBILIDAD`. Se abre una ventana
 | Da (m) | — | 0 = no evaluar adelantamiento. También puede venir por tramo (cuarta columna del archivo de velocidades) |
 | Altura objeto adelantamiento (m) | 1.30 | |
 
-Los campos vienen precargados con los valores de referencia de la DG-2018; edítalos según tu norma y tipo de vía.
+Los campos vienen precargados con los valores de referencia de la DG-2018; edítalos según tu norma y tipo de vía. El botón **Sugerir según DG-2018** rellena a partir de la velocidad de diseño los tres criterios que no salen de la geometría: A ≥ 1 % (carreteras pavimentadas; usa 2 % en afirmadas), longitud mínima absoluta 0.6·V (criterio AASHTO) y Da de la Tabla 205.03 (por ejemplo 410 m a 60 km/h y 540 m a 80 km/h).
 
 **Superficie (opcional)**
 

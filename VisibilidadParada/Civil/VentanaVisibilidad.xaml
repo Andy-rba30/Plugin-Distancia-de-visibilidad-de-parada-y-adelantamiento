@@ -140,7 +140,10 @@
               </Grid.ColumnDefinitions>
               <Label Content="Velocidad de diseño V (km/h):"/>
               <TextBox x:Name="txtV" Grid.Column="1"/>
-              <TextBlock Grid.Column="2" Style="{StaticResource Ref}" Text="se usa donde no haya tramo definido"/>
+              <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Content="Sugerir según DG-2018" Style="{StaticResource BotonChico}" Click="Sugerir_Click" ToolTip="Rellena A, la L mínima absoluta y Da a partir de la velocidad de diseño"/>
+                <TextBlock Style="{StaticResource Ref}" VerticalAlignment="Center" Text="rellena A, L mínima y Da según la velocidad"/>
+              </StackPanel>
             </Grid>
             <CheckBox x:Name="chkTramos" Content="Usar velocidades por tramo desde un archivo (prog_inicio;prog_fin;V[;Da])" Checked="Tramos_Changed" Unchecked="Tramos_Changed"/>
             <Grid>
@@ -197,10 +200,10 @@
               </Grid.RowDefinitions>
               <Label Content="Diferencia algebraica A (%) que exige curva:" Grid.Row="0"/>
               <TextBox x:Name="txtUmbralA" Grid.Row="0" Grid.Column="1"/>
-              <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="los PVI sin curva con A mayor o igual se marcan NO CUMPLE"/>
+              <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="DG-2018: 1 % en pavimentadas, 2 % en afirmadas. Los PVI sin curva con A mayor o igual se marcan NO CUMPLE"/>
               <Label Content="Longitud mínima absoluta de curva (m):" Grid.Row="1"/>
               <TextBox x:Name="txtLMin" Grid.Row="1" Grid.Column="1"/>
-              <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Ref}" Text="0 = no aplicar; la L exigida es la mayor entre esta y la de visibilidad"/>
+              <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Ref}" Text="ref. AASHTO: 0.6·V. 0 = no aplicar; la L exigida es la mayor entre esta y la de visibilidad"/>
             </Grid>
 
             <TextBlock Style="{StaticResource Titulo}" Text="Distancia de visibilidad de adelantamiento"/>
@@ -216,7 +219,7 @@
               </Grid.RowDefinitions>
               <Label Content="Da (m):" Grid.Row="0"/>
               <TextBox x:Name="txtDa" Grid.Row="0" Grid.Column="1"/>
-              <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="0 = no evaluar adelantamiento; solo aplica en curvas convexas"/>
+              <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="Tabla 205.03 DG-2018 según V. 0 = no evaluar; solo aplica en curvas convexas"/>
               <Label Content="Altura del objeto para adelantamiento (m):" Grid.Row="1"/>
               <TextBox x:Name="txtObjetoDa" Grid.Row="1" Grid.Column="1"/>
               <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Ref}" Text="ref. DG-2018: 1.30"/>
