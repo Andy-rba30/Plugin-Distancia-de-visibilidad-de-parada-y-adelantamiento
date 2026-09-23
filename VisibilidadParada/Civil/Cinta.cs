@@ -158,6 +158,11 @@ namespace VisibilidadParada.Civil
                 AgregarBoton(panel, "ARBA_BTN_VISIBILIDAD", "Visibilidad\nde parada", "VISIBILIDAD",
                     "Verifica las curvas verticales del perfil por visibilidad de parada y adelantamiento, y muestra la tabla de CUMPLE / NO CUMPLE.",
                     ColorVisibilidad, "Dp");
+
+                var panelIa = ObtenerPanel("ARBA_IA", "IA");
+                AgregarBoton(panelIa, "ARBA_BTN_MCP", "Conexión\nIA", "ARBAMCP",
+                    "Muestra el estado del servidor local para el puente MCP (puerto 8765) y lo reinicia si está caído.",
+                    Color.FromRgb(0x2E, 0x7D, 0x32), "IA");
             }
             catch (System.Exception ex)
             {

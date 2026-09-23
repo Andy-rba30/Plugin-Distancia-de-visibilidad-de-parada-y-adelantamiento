@@ -69,6 +69,11 @@ namespace VisibilidadParada.Civil
             }
             else ed.WriteMessage("\nNo se pudo iniciar: " + VisibilidadParada.Mcp.Servidor.UltimoError);
             foreach (var l in VisibilidadParada.Mcp.Historial.Ultimas(10)) ed.WriteMessage("\n  " + l);
+
+            string estado = VisibilidadParada.Mcp.Servidor.Activo
+                ? "Conectado. El servidor local para la IA está activo en\nhttp://127.0.0.1:" + VisibilidadParada.Mcp.Servidor.Puerto + "/\n\nAhora puedes usar Antigravity con Civil 3D (el puente MCP debe estar en marcha)."
+                : "No se pudo iniciar el servidor local:\n" + VisibilidadParada.Mcp.Servidor.UltimoError + "\n\n¿Otro programa usa el puerto " + VisibilidadParada.Mcp.Servidor.Puerto + "? Cámbialo con la variable de entorno ARBA_MCP_PORT.";
+            AcApp.ShowAlertDialog(estado);
         }
 
         /// <summary>Versión de línea de comandos con superficie (equivale a VISIBILIDAD con la comprobación contra superficie activada).</summary>
