@@ -268,14 +268,93 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "ejecutar_comando",
-                Descripcion = "EnvÃ­a un comando a la lÃ­nea de comandos del dibujo activo (se ejecuta de forma asÃ­ncrona; consulta leer_historial para ver si terminÃ³). Para comandos con diÃ¡logo usa el prefijo '-' cuando exista versiÃ³n de lÃ­nea de comandos.",
+                Descripcion = "Envía un comando a la línea de comandos del dibujo activo de forma síncrona. Retorna cuando termina o falla (tiempo límite 60s).",
                 Parametros = { P("comando", "string", "Texto del comando, por ejemplo 'REGEN' o '_.ZOOM E'", true) },
-                Ejecutar = a =>
+                EjecutarAsync = async a =>
                 {
-                    var doc = DocActivo();
-                    string cmd = Requerido(a, "comando").Trim();
-                    doc.SendStringToExecute(cmd + " ", true, false, true);
-                    return new { enviado = cmd };
+                    string comando = Requerido(a, "comando").Trim();
+                    var tcs = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    
+                    string cmdParse = comando.Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "";
+                    cmdParse = cmdParse.TrimStart('_', '.').ToUpperInvariant();
+
+                    Document doc = DocActivo();
+                    bool started = false;
+
+                    void OnCommandWillStart(object s, CommandEventArgs e)
+                    {
+                        if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) started = true;
+                    }
+                    void OnCommandEnded(object s, CommandEventArgs e)
+                    {
+                        if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) {
+                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            tcs.TrySetResult("terminado");
+                        }
+                    }
+                    void OnCommandCancelled(object s, CommandEventArgs e)
+                    {
+                        if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) {
+                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            tcs.TrySetResult("cancelado");
+                        }
+                    }
+                    void OnCommandFailed(object s, CommandEventArgs e)
+                    {
+                        if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) {
+                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            tcs.TrySetResult("fallido");
+                        }
+                    }
+
+                    await HiloPrincipal.Ejecutar(() =>
+                    {
+                        try {
+                            if (Convert.ToInt32(AcApp.GetSystemVariable("CMDACTIVE")) > 0) {
+                                tcs.TrySetResult(new { ok = false, error = "hay un comando activo en Civil 3D" });
+                                return true;
+                            }
+                            
+                            doc.CommandWillStart += OnCommandWillStart;
+                            doc.CommandEnded += OnCommandEnded;
+                            doc.CommandCancelled += OnCommandCancelled;
+                            doc.CommandFailed += OnCommandFailed;
+                            
+                            doc.SendStringToExecute("_.UNDO _BE\n" + comando + "\n", true, false, false);
+                        } catch (Exception ex) { tcs.TrySetException(ex); }
+                        return true;
+                    });
+
+                    for (int i = 0; i < 30; i++) {
+                        if (tcs.Task.IsCompleted) break;
+                        if (started) break;
+                        await Task.Delay(100);
+                    }
+                    if (!started && !tcs.Task.IsCompleted) {
+                        await HiloPrincipal.Ejecutar(() => {
+                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            tcs.TrySetResult("el comando no se inició (¿nombre incorrecto?)");
+                            return true;
+                        });
+                    }
+
+                    var completada = await Task.WhenAny(tcs.Task, Task.Delay(60000));
+                    
+                    await HiloPrincipal.Ejecutar(() =>
+                    {
+                        doc.CommandWillStart -= OnCommandWillStart;
+                        doc.CommandEnded -= OnCommandEnded;
+                        doc.CommandCancelled -= OnCommandCancelled;
+                        doc.CommandFailed -= OnCommandFailed;
+                        
+                        if (completada != tcs.Task && !tcs.Task.IsCompleted) {
+                            doc.SendStringToExecute("\x1B\x1B", false, false, false);
+                            tcs.TrySetResult("timeout con ESC");
+                        }
+                        return true;
+                    });
+
+                    return await tcs.Task;
                 }
             });
 
@@ -397,4 +476,5 @@ namespace ArbaMcp
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
     }
 }
+
 
