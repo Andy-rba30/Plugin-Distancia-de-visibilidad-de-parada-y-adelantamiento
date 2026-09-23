@@ -49,6 +49,28 @@ namespace VisibilidadParada.Civil
             }
         }
 
+        /// <summary>Muestra el estado del servidor MCP y una prueba rápida en la línea de comandos.</summary>
+        [CommandMethod("ARBAMCP")]
+        public void ArbaMcp()
+        {
+            var doc = AcApp.DocumentManager.MdiActiveDocument;
+            if (doc == null) return;
+            var ed = doc.Editor;
+            if (!VisibilidadParada.Mcp.Servidor.Activo)
+            {
+                ed.WriteMessage("\nServidor MCP: INACTIVO. " + VisibilidadParada.Mcp.Servidor.UltimoError);
+                ed.WriteMessage("\nSe intenta iniciar de nuevo...");
+                VisibilidadParada.Mcp.Servidor.Iniciar();
+            }
+            if (VisibilidadParada.Mcp.Servidor.Activo)
+            {
+                ed.WriteMessage("\nServidor MCP activo en http://127.0.0.1:" + VisibilidadParada.Mcp.Servidor.Puerto + "/");
+                ed.WriteMessage("\nPrueba desde PowerShell:  curl.exe http://127.0.0.1:" + VisibilidadParada.Mcp.Servidor.Puerto + "/tools");
+            }
+            else ed.WriteMessage("\nNo se pudo iniciar: " + VisibilidadParada.Mcp.Servidor.UltimoError);
+            foreach (var l in VisibilidadParada.Mcp.Historial.Ultimas(10)) ed.WriteMessage("\n  " + l);
+        }
+
         /// <summary>Versión de línea de comandos con superficie (equivale a VISIBILIDAD con la comprobación contra superficie activada).</summary>
         [CommandMethod("VISPARADA")]
         public void VisParada()

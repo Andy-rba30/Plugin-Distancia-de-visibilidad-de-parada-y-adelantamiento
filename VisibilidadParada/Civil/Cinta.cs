@@ -31,6 +31,9 @@ namespace VisibilidadParada.Civil
                 AcApp.Idle += AlEstarInactivo;
             }
 
+            // Servidor local para el puente MCP (127.0.0.1, puerto ARBA_MCP_PORT o 8765)
+            try { VisibilidadParada.Mcp.Servidor.Iniciar(); } catch { }
+
             // Al cambiar de espacio de trabajo la cinta se reconstruye: se vuelve a crear la pestaña.
             AcApp.SystemVariableChanged += (s, e) =>
             {
@@ -39,7 +42,10 @@ namespace VisibilidadParada.Civil
             };
         }
 
-        public void Terminate() { }
+        public void Terminate()
+        {
+            try { VisibilidadParada.Mcp.Servidor.Detener(); } catch { }
+        }
 
         private static void AlInicializarCinta(object sender, RibbonItemEventArgs e)
         {
