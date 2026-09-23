@@ -1,3 +1,4 @@
+﻿using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,11 +32,12 @@ namespace ArbaMcp
         public string Descripcion;
         public List<Parametro> Parametros = new List<Parametro>();
         public Func<JsonElement, object> Ejecutar;
+        public Func<JsonElement, Task<object>> EjecutarAsync;
     }
 
     /// <summary>
-    /// Registro de herramientas expuestas por MCP. Otros plugins de la pestaña ARBA pueden llamar a
-    /// Herramientas.Registrar(...) desde su Initialize para añadir las suyas.
+    /// Registro de herramientas expuestas por MCP. Otros plugins de la pestaÃ±a ARBA pueden llamar a
+    /// Herramientas.Registrar(...) desde su Initialize para aÃ±adir las suyas.
     /// </summary>
     public static class Herramientas
     {
@@ -81,7 +83,7 @@ namespace ArbaMcp
             var v = a.GetProperty(n);
             if (v.ValueKind == JsonValueKind.Number) return v.GetDouble();
             if (v.ValueKind == JsonValueKind.String && double.TryParse(v.GetString().Replace(',', '.'), NumberStyles.Float, Inv, out double d)) return d;
-            throw new ArgumentException("El parámetro '" + n + "' debe ser numérico.");
+            throw new ArgumentException("El parÃ¡metro '" + n + "' debe ser numÃ©rico.");
         }
 
         private static bool Bool(JsonElement a, string n, bool def)
@@ -90,7 +92,7 @@ namespace ArbaMcp
             var v = a.GetProperty(n);
             if (v.ValueKind == JsonValueKind.True) return true;
             if (v.ValueKind == JsonValueKind.False) return false;
-            if (v.ValueKind == JsonValueKind.String) return v.GetString().Trim().ToLowerInvariant() is "1" or "si" or "sí" or "true" or "yes";
+            if (v.ValueKind == JsonValueKind.String) return v.GetString().Trim().ToLowerInvariant() is "1" or "si" or "sÃ­" or "true" or "yes";
             if (v.ValueKind == JsonValueKind.Number) return v.GetDouble() != 0;
             return def;
         }
@@ -98,7 +100,7 @@ namespace ArbaMcp
         private static string Requerido(JsonElement a, string n)
         {
             string s = Str(a, n);
-            if (string.IsNullOrWhiteSpace(s)) throw new ArgumentException("Falta el parámetro obligatorio '" + n + "'.");
+            if (string.IsNullOrWhiteSpace(s)) throw new ArgumentException("Falta el parÃ¡metro obligatorio '" + n + "'.");
             return s;
         }
 
@@ -108,7 +110,7 @@ namespace ArbaMcp
         private static Document DocActivo()
         {
             var doc = AcApp.DocumentManager.MdiActiveDocument;
-            if (doc == null) throw new InvalidOperationException("No hay ningún dibujo abierto en Civil 3D.");
+            if (doc == null) throw new InvalidOperationException("No hay ningÃºn dibujo abierto en Civil 3D.");
             return doc;
         }
 
@@ -143,7 +145,7 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "ping",
-                Descripcion = "Comprueba que el plugin responde. Devuelve versión, dibujo activo y hora.",
+                Descripcion = "Comprueba que el plugin responde. Devuelve versiÃ³n, dibujo activo y hora.",
                 Ejecutar = a =>
                 {
                     var doc = AcApp.DocumentManager.MdiActiveDocument;
@@ -196,7 +198,7 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "listar_perfiles",
-                Descripcion = "Lista los perfiles de un alineamiento: nombre, tipo (EG terreno, FG rasante), progresivas y número de PVI.",
+                Descripcion = "Lista los perfiles de un alineamiento: nombre, tipo (EG terreno, FG rasante), progresivas y nÃºmero de PVI.",
                 Parametros = { P("alineamiento", "string", "Nombre del alineamiento", true) },
                 Ejecutar = a =>
                 {
@@ -266,7 +268,7 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "ejecutar_comando",
-                Descripcion = "Envía un comando a la línea de comandos del dibujo activo (se ejecuta de forma asíncrona; consulta leer_historial para ver si terminó). Para comandos con diálogo usa el prefijo '-' cuando exista versión de línea de comandos.",
+                Descripcion = "EnvÃ­a un comando a la lÃ­nea de comandos del dibujo activo (se ejecuta de forma asÃ­ncrona; consulta leer_historial para ver si terminÃ³). Para comandos con diÃ¡logo usa el prefijo '-' cuando exista versiÃ³n de lÃ­nea de comandos.",
                 Parametros = { P("comando", "string", "Texto del comando, por ejemplo 'REGEN' o '_.ZOOM E'", true) },
                 Ejecutar = a =>
                 {
@@ -280,15 +282,15 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "leer_historial",
-                Descripcion = "Devuelve las últimas líneas del historial del plugin: comandos iniciados y terminados, llamadas MCP y mensajes.",
-                Parametros = { P("ultimas_n", "number", "Cantidad de líneas (por defecto 50)") },
+                Descripcion = "Devuelve las Ãºltimas lÃ­neas del historial del plugin: comandos iniciados y terminados, llamadas MCP y mensajes.",
+                Parametros = { P("ultimas_n", "number", "Cantidad de lÃ­neas (por defecto 50)") },
                 Ejecutar = a => Historial.Ultimas((int)Num(a, "ultimas_n", 50))
             });
 
             Registrar(new Herramienta
             {
                 Nombre = "capturar_pantalla",
-                Descripcion = "Guarda una captura PNG de la ventana principal de Civil 3D (incluye cuadros de diálogo abiertos) y devuelve la ruta.",
+                Descripcion = "Guarda una captura PNG de la ventana principal de Civil 3D (incluye cuadros de diÃ¡logo abiertos) y devuelve la ruta.",
                 Parametros = { P("ruta", "string", "Ruta del PNG a crear (por defecto en la carpeta temporal)") },
                 Ejecutar = a =>
                 {
@@ -296,7 +298,7 @@ namespace ArbaMcp
                     if (string.IsNullOrWhiteSpace(ruta))
                         ruta = Path.Combine(Path.GetTempPath(), "arba_captura_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png");
                     var h = AcApp.MainWindow.Handle;
-                    if (!GetWindowRect(h, out RECT r)) throw new InvalidOperationException("No se pudo obtener el rectángulo de la ventana.");
+                    if (!GetWindowRect(h, out RECT r)) throw new InvalidOperationException("No se pudo obtener el rectÃ¡ngulo de la ventana.");
                     int w = Math.Max(1, r.Right - r.Left), alto = Math.Max(1, r.Bottom - r.Top);
                     using (var bmp = new Bitmap(w, alto))
                     using (var g = Graphics.FromImage(bmp))
@@ -312,13 +314,13 @@ namespace ArbaMcp
             RegistrarAdicionales();
         }
 
-        // ------------------------------------------------------------------ herramientas genéricas adicionales
+        // ------------------------------------------------------------------ herramientas genÃ©ricas adicionales
         private static void RegistrarAdicionales()
         {
             Registrar(new Herramienta
             {
                 Nombre = "listar_pvis",
-                Descripcion = "Devuelve la geometría vertical de un perfil: cada PVI con progresiva, cota, pendientes de entrada y salida, y la curva vertical que lo contiene (tipo y longitud) si existe.",
+                Descripcion = "Devuelve la geometrÃ­a vertical de un perfil: cada PVI con progresiva, cota, pendientes de entrada y salida, y la curva vertical que lo contiene (tipo y longitud) si existe.",
                 Parametros =
                 {
                     P("alineamiento", "string", "Nombre del alineamiento", true),
@@ -395,3 +397,4 @@ namespace ArbaMcp
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
     }
 }
+
