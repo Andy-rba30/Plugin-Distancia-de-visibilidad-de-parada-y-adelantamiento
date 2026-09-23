@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Paquete de carga automática para Civil 3D. Se copia a %APPDATA%\Autodesk\ApplicationPlugins\VisibilidadParada.bundle -->
-<ApplicationPackage SchemaVersion="1.0"
+<ApplicationPackage SchemaVersion="1.0" AutodeskProduct="AutoCAD"
                     AppVersion="1.0.0"
                     Description="Verificación de visibilidad de parada, adelantamiento y curvas verticales (pestaña ARBA)"
                     Author="ARBA"

@@ -372,8 +372,8 @@ namespace VisibilidadParada.Civil
             _ocupado = si;
             btnAnalizar.IsEnabled = !si;
             btnCerrar.IsEnabled = !si;
-            btnCancelar.Visibility = si ? Visibility.Visible : Visibility.Collapsed;
-            barra.Visibility = si ? Visibility.Visible : Visibility.Collapsed;
+            btnCancelar.Visibility = si ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            barra.Visibility = si ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
             barra.Value = 0;
             Cursor = si ? System.Windows.Input.Cursors.Wait : null;
         }
@@ -476,9 +476,10 @@ namespace VisibilidadParada.Civil
             if (s.Contains("+"))
             {
                 var pp = s.Split('+');
+                double km = 0, m = 0;
                 ok = pp.Length == 2 &&
-                     double.TryParse(pp[0], NumberStyles.Float, Inv, out double km) &&
-                     double.TryParse(pp[1], NumberStyles.Float, Inv, out double m);
+                     double.TryParse(pp[0], NumberStyles.Float, Inv, out km) &&
+                     double.TryParse(pp[1], NumberStyles.Float, Inv, out m);
                 if (ok) v = km * 1000.0 + m;
             }
             else ok = double.TryParse(s, NumberStyles.Float, Inv, out v);
@@ -547,8 +548,8 @@ namespace VisibilidadParada.Civil
             }).ToList();
 
             bool haySectores = d.Resultados != null;
-            lblSectores.Visibility = haySectores ? Visibility.Visible : Visibility.Collapsed;
-            gridSectores.Visibility = haySectores ? Visibility.Visible : Visibility.Collapsed;
+            lblSectores.Visibility = haySectores ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            gridSectores.Visibility = haySectores ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
             if (haySectores)
             {
                 lblSectores.Text = d.Sectores.Count == 0
