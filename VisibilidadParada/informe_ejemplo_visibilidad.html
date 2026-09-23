@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verificación de visibilidad de parada y curvas verticales</title><style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#1d1d1f;background:#fff}
+h1{font-size:22px;margin:0 0 4px} h2{font-size:17px;margin:28px 0 8px;border-bottom:2px solid #1f4e79;padding-bottom:4px;color:#1f4e79}
+.sub{color:#555;font-size:13px} table{border-collapse:collapse;font-size:12.5px;width:100%}
+th,td{border:1px solid #c9ced6;padding:4px 7px;text-align:right} th{background:#1f4e79;color:#fff;position:sticky;top:0}
+td.t,th.t{text-align:left} tr:nth-child(even) td{background:#f5f7fa}
+.ok{color:#1b7a2f;font-weight:600}.no{color:#b3261e;font-weight:700}.ne{color:#8a6d00}
+.kpi{display:flex;gap:12px;flex-wrap:wrap}.kpi div{border:1px solid #c9ced6;border-radius:8px;padding:10px 16px;min-width:130px}
+.kpi b{display:block;font-size:22px}.wrap{overflow-x:auto;max-height:70vh}
+.nota{font-size:12.5px;color:#444;line-height:1.5} .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:4px 24px;font-size:13px}
+@media print{.wrap{max-height:none;overflow:visible} th{position:static}}
+</style></head><body>
+<h1>Verificación de distancia de visibilidad de parada (DVP)</h1>
+<div class="sub">Generado el 23/09/2026 16:54 · Dibujo: prueba.dwg · Tiempo de cálculo: 1.2 s</div>
+<h2>Datos del análisis</h2><div class="grid">
+<div>Eje: <b>Eje 1</b></div><div>Perfil (rasante): <b>Rasante</b></div>
+<div>Superficie de obstrucción: <b>Corredor</b></div>
+<div>Rango: <b>0+300.00 – 0+700.00</b></div>
+<div>Velocidad de diseño: <b>60 km/h</b></div>
+<div>tp = <b>2.50 s</b> · a = <b>3.40 m/s²</b></div>
+<div>Altura de ojo / objeto: <b>1.07 m / 0.15 m</b></div>
+<div>Desfase carril creciente / decreciente: <b>0.00 m / 0.00 m</b></div>
+<div>Intervalo de evaluación: <b>2.0 m</b> · Sentido: <b>Ambos</b></div>
+<div>Criterio de pendiente: <b>más desfavorable en la DVP</b></div>
+<div>Muestreo de la visual: <b>0.50 m</b> · Paso de búsqueda: <b>2.50 m</b></div>
+</div>
+<h2>Resumen</h2>
+<p class="sub">Visibilidad de parada a lo largo del eje</p><div class="kpi">
+<div>Puntos evaluados<b>402</b></div>
+<div>Cumplen<b class="ok">386</b></div>
+<div>No cumplen<b class="no">16</b></div>
+<div>No evaluables<b class="ne">0</b></div>
+<div>Sectores deficientes<b class="no">2</b></div>
+</div>
+<h2>Sectores que no cumplen</h2>
+<div class="wrap"><table><tr><th class="t">N°</th><th class="t">Sentido</th><th>Desde</th><th>Hasta</th><th>Longitud aprox. (m)</th><th>DVP requerida máx. (m)</th><th>Visibilidad disponible mín. (m)</th><th>Déficit máx. (m)</th></tr>
+<tr><td class="t">1</td><td class="t">Creciente</td><td>0+478.00</td><td>0+492.00</td><td>16</td><td>87.93</td><td>87.00</td><td class="no">0.82</td></tr>
+<tr><td class="t">2</td><td class="t">Decreciente</td><td>0+508.00</td><td>0+522.00</td><td>16</td><td>87.93</td><td>87.00</td><td class="no">0.82</td></tr>
+</table></div>
+<h2>Detalle por progresiva</h2><div class="wrap"><table>
+<tr><th>Progresiva</th><th class="t">Sentido</th><th>V (km/h)</th><th>Pendiente usada</th><th>DVP requerida (m)</th><th>Visibilidad disponible (m)</th><th>Margen (m)</th><th class="t">Estado</th><th class="t">Nota</th></tr>
+<tr><td>0+300.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>163.83</td><td>85.47</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+300.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+302.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>162.03</td><td>83.67</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+302.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+304.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>160.23</td><td>81.87</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+304.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+306.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>158.52</td><td>80.15</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+306.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+308.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>156.72</td><td>78.36</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+308.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+310.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>155.00</td><td>76.64</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+310.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+312.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>153.20</td><td>74.84</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+312.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+314.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>151.48</td><td>73.12</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+314.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+316.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>149.77</td><td>71.40</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+316.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+318.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>148.05</td><td>69.68</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+318.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+320.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>146.33</td><td>67.97</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+320.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+322.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>144.61</td><td>66.25</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+322.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+324.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>142.89</td><td>64.53</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+324.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+326.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>141.17</td><td>62.81</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+326.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+328.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>139.53</td><td>61.17</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+328.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+330.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>137.89</td><td>59.53</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+330.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+332.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>136.17</td><td>57.81</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+332.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+334.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>134.53</td><td>56.17</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+334.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+336.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>132.89</td><td>54.53</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+336.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+338.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>131.33</td><td>52.97</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+338.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+340.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>129.69</td><td>51.32</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+340.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+342.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>128.12</td><td>49.76</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+342.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+344.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>126.48</td><td>48.12</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+344.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+346.00</td><td class="t">Creciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>124.92</td><td>46.56</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+346.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+348.00</td><td class="t">Creciente</td><td>60</td><td>3.95 %</td><td>78.41</td><td>123.36</td><td>44.95</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+348.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+350.00</td><td class="t">Creciente</td><td>60</td><td>3.84 %</td><td>78.52</td><td>121.88</td><td>43.36</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+350.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+352.00</td><td class="t">Creciente</td><td>60</td><td>3.73 %</td><td>78.62</td><td>120.31</td><td>41.70</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+352.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+354.00</td><td class="t">Creciente</td><td>60</td><td>3.63 %</td><td>78.72</td><td>118.83</td><td>40.11</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+354.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+356.00</td><td class="t">Creciente</td><td>60</td><td>3.52 %</td><td>78.82</td><td>117.34</td><td>38.52</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+356.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+358.00</td><td class="t">Creciente</td><td>60</td><td>3.41 %</td><td>78.93</td><td>115.86</td><td>36.93</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+358.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+360.00</td><td class="t">Creciente</td><td>60</td><td>3.31 %</td><td>79.03</td><td>114.45</td><td>35.42</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+360.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+362.00</td><td class="t">Creciente</td><td>60</td><td>3.20 %</td><td>79.14</td><td>113.05</td><td>33.91</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+362.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+364.00</td><td class="t">Creciente</td><td>60</td><td>3.09 %</td><td>79.24</td><td>111.64</td><td>32.40</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+364.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+366.00</td><td class="t">Creciente</td><td>60</td><td>2.99 %</td><td>79.35</td><td>110.23</td><td>30.88</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+366.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+368.00</td><td class="t">Creciente</td><td>60</td><td>2.88 %</td><td>79.46</td><td>108.91</td><td>29.45</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+368.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+370.00</td><td class="t">Creciente</td><td>60</td><td>2.77 %</td><td>79.56</td><td>107.58</td><td>28.01</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+370.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+372.00</td><td class="t">Creciente</td><td>60</td><td>2.67 %</td><td>79.67</td><td>106.25</td><td>26.58</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+372.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+374.00</td><td class="t">Creciente</td><td>60</td><td>2.56 %</td><td>79.78</td><td>105.00</td><td>25.22</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+374.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+376.00</td><td class="t">Creciente</td><td>60</td><td>2.35 %</td><td>80.00</td><td>103.75</td><td>23.75</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+376.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+378.00</td><td class="t">Creciente</td><td>60</td><td>2.24 %</td><td>80.11</td><td>102.58</td><td>22.47</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+378.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+380.00</td><td class="t">Creciente</td><td>60</td><td>2.13 %</td><td>80.22</td><td>101.41</td><td>21.18</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+380.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+382.00</td><td class="t">Creciente</td><td>60</td><td>2.03 %</td><td>80.33</td><td>100.23</td><td>19.90</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+382.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+384.00</td><td class="t">Creciente</td><td>60</td><td>1.92 %</td><td>80.45</td><td>99.14</td><td>18.69</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+384.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+386.00</td><td class="t">Creciente</td><td>60</td><td>1.81 %</td><td>80.56</td><td>98.05</td><td>17.49</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+386.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+388.00</td><td class="t">Creciente</td><td>60</td><td>1.71 %</td><td>80.67</td><td>97.03</td><td>16.36</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+388.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+390.00</td><td class="t">Creciente</td><td>60</td><td>1.60 %</td><td>80.79</td><td>96.02</td><td>15.23</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+390.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+392.00</td><td class="t">Creciente</td><td>60</td><td>1.49 %</td><td>80.90</td><td>95.08</td><td>14.17</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+392.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+394.00</td><td class="t">Creciente</td><td>60</td><td>1.39 %</td><td>81.02</td><td>94.22</td><td>13.20</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+394.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+396.00</td><td class="t">Creciente</td><td>60</td><td>1.28 %</td><td>81.14</td><td>93.36</td><td>12.22</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+396.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+398.00</td><td class="t">Creciente</td><td>60</td><td>1.17 %</td><td>81.25</td><td>92.50</td><td>11.25</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+398.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+400.00</td><td class="t">Creciente</td><td>60</td><td>1.07 %</td><td>81.37</td><td>91.80</td><td>10.42</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+400.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+402.00</td><td class="t">Creciente</td><td>60</td><td>0.96 %</td><td>81.49</td><td>91.09</td><td>9.60</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+402.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+404.00</td><td class="t">Creciente</td><td>60</td><td>0.85 %</td><td>81.61</td><td>90.39</td><td>8.78</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+404.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+406.00</td><td class="t">Creciente</td><td>60</td><td>0.75 %</td><td>81.73</td><td>89.84</td><td>8.11</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+406.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+408.00</td><td class="t">Creciente</td><td>60</td><td>0.64 %</td><td>81.85</td><td>89.30</td><td>7.44</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+408.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+410.00</td><td class="t">Creciente</td><td>60</td><td>0.43 %</td><td>82.10</td><td>88.75</td><td>6.65</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+410.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+412.00</td><td class="t">Creciente</td><td>60</td><td>0.32 %</td><td>82.22</td><td>88.36</td><td>6.14</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+412.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+414.00</td><td class="t">Creciente</td><td>60</td><td>0.21 %</td><td>82.34</td><td>87.97</td><td>5.62</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+414.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+416.00</td><td class="t">Creciente</td><td>60</td><td>0.11 %</td><td>82.47</td><td>87.66</td><td>5.19</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+416.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+418.00</td><td class="t">Creciente</td><td>60</td><td>0.00 %</td><td>82.59</td><td>87.42</td><td>4.83</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+418.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+420.00</td><td class="t">Creciente</td><td>60</td><td>-0.11 %</td><td>82.72</td><td>87.19</td><td>4.47</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+420.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+422.00</td><td class="t">Creciente</td><td>60</td><td>-0.21 %</td><td>82.85</td><td>87.11</td><td>4.26</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+422.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+424.00</td><td class="t">Creciente</td><td>60</td><td>-0.32 %</td><td>82.98</td><td>87.03</td><td>4.06</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+424.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+426.00</td><td class="t">Creciente</td><td>60</td><td>-0.43 %</td><td>83.10</td><td>87.03</td><td>3.93</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+426.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+428.00</td><td class="t">Creciente</td><td>60</td><td>-0.53 %</td><td>83.23</td><td>87.03</td><td>3.80</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+428.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+430.00</td><td class="t">Creciente</td><td>60</td><td>-0.64 %</td><td>83.36</td><td>87.03</td><td>3.67</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+430.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+432.00</td><td class="t">Creciente</td><td>60</td><td>-0.75 %</td><td>83.49</td><td>87.03</td><td>3.54</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+432.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+434.00</td><td class="t">Creciente</td><td>60</td><td>-0.85 %</td><td>83.63</td><td>87.03</td><td>3.41</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+434.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+436.00</td><td class="t">Creciente</td><td>60</td><td>-0.96 %</td><td>83.76</td><td>87.03</td><td>3.27</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+436.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+438.00</td><td class="t">Creciente</td><td>60</td><td>-1.07 %</td><td>83.89</td><td>87.03</td><td>3.14</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+438.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+440.00</td><td class="t">Creciente</td><td>60</td><td>-1.28 %</td><td>84.16</td><td>87.03</td><td>2.87</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+440.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+442.00</td><td class="t">Creciente</td><td>60</td><td>-1.39 %</td><td>84.30</td><td>87.03</td><td>2.73</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+442.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+444.00</td><td class="t">Creciente</td><td>60</td><td>-1.49 %</td><td>84.44</td><td>87.03</td><td>2.60</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+444.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+446.00</td><td class="t">Creciente</td><td>60</td><td>-1.60 %</td><td>84.57</td><td>87.03</td><td>2.46</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+446.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+448.00</td><td class="t">Creciente</td><td>60</td><td>-1.71 %</td><td>84.71</td><td>87.03</td><td>2.32</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+448.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+450.00</td><td class="t">Creciente</td><td>60</td><td>-1.81 %</td><td>84.85</td><td>87.03</td><td>2.18</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+450.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+452.00</td><td class="t">Creciente</td><td>60</td><td>-1.92 %</td><td>84.99</td><td>87.03</td><td>2.04</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+452.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+454.00</td><td class="t">Creciente</td><td>60</td><td>-2.03 %</td><td>85.13</td><td>87.06</td><td>1.92</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+454.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+456.00</td><td class="t">Creciente</td><td>60</td><td>-2.13 %</td><td>85.28</td><td>87.01</td><td>1.74</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+456.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+458.00</td><td class="t">Creciente</td><td>60</td><td>-2.24 %</td><td>85.42</td><td>87.05</td><td>1.63</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+458.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+460.00</td><td class="t">Creciente</td><td>60</td><td>-2.35 %</td><td>85.56</td><td>87.02</td><td>1.45</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+460.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+462.00</td><td class="t">Creciente</td><td>60</td><td>-2.45 %</td><td>85.71</td><td>87.05</td><td>1.34</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+462.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+464.00</td><td class="t">Creciente</td><td>60</td><td>-2.56 %</td><td>85.86</td><td>87.04</td><td>1.18</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+464.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+466.00</td><td class="t">Creciente</td><td>60</td><td>-2.77 %</td><td>86.15</td><td>86.99</td><td>0.84</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+466.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+468.00</td><td class="t">Creciente</td><td>60</td><td>-2.88 %</td><td>86.30</td><td>87.05</td><td>0.75</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+468.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+470.00</td><td class="t">Creciente</td><td>60</td><td>-2.99 %</td><td>86.45</td><td>87.04</td><td>0.59</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+470.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+472.00</td><td class="t">Creciente</td><td>60</td><td>-3.09 %</td><td>86.60</td><td>87.05</td><td>0.45</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+472.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+474.00</td><td class="t">Creciente</td><td>60</td><td>-3.20 %</td><td>86.75</td><td>87.03</td><td>0.28</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+474.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+476.00</td><td class="t">Creciente</td><td>60</td><td>-3.31 %</td><td>86.91</td><td>87.06</td><td>0.15</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+476.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+478.00</td><td class="t">Creciente</td><td>60</td><td>-3.41 %</td><td>87.06</td><td>87.06</td><td>-0.00</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+478.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+480.00</td><td class="t">Creciente</td><td>60</td><td>-3.52 %</td><td>87.22</td><td>87.01</td><td>-0.21</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+480.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+482.00</td><td class="t">Creciente</td><td>60</td><td>-3.63 %</td><td>87.37</td><td>87.00</td><td>-0.37</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+482.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+484.00</td><td class="t">Creciente</td><td>60</td><td>-3.73 %</td><td>87.53</td><td>87.03</td><td>-0.50</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+484.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+486.00</td><td class="t">Creciente</td><td>60</td><td>-3.84 %</td><td>87.69</td><td>87.03</td><td>-0.66</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+486.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+488.00</td><td class="t">Creciente</td><td>60</td><td>-3.95 %</td><td>87.85</td><td>87.03</td><td>-0.82</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+488.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+490.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>87.11</td><td>-0.82</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+490.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>233.98</td><td>146.06</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+492.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>87.42</td><td>-0.51</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+492.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>142.03</td><td>54.10</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+494.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>88.06</td><td>0.13</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+494.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>115.86</td><td>27.93</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+496.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>89.09</td><td>1.16</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+496.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>103.91</td><td>15.98</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+498.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>90.70</td><td>2.77</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+498.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>97.27</td><td>9.34</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+500.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>93.28</td><td>5.35</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+500.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>93.28</td><td>5.35</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+502.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>97.27</td><td>9.34</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+502.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>90.70</td><td>2.77</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+504.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>103.91</td><td>15.98</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+504.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>89.09</td><td>1.16</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+506.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>115.86</td><td>27.93</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+506.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>88.06</td><td>0.13</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+508.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>142.03</td><td>54.10</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+508.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>87.42</td><td>-0.51</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+510.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>233.98</td><td>146.06</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+510.00</td><td class="t">Decreciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>87.11</td><td>-0.82</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+512.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+512.00</td><td class="t">Decreciente</td><td>60</td><td>-3.95 %</td><td>87.85</td><td>87.03</td><td>-0.82</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+514.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+514.00</td><td class="t">Decreciente</td><td>60</td><td>-3.84 %</td><td>87.69</td><td>87.03</td><td>-0.66</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+516.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+516.00</td><td class="t">Decreciente</td><td>60</td><td>-3.73 %</td><td>87.53</td><td>87.03</td><td>-0.50</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+518.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+518.00</td><td class="t">Decreciente</td><td>60</td><td>-3.63 %</td><td>87.37</td><td>87.00</td><td>-0.37</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+520.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+520.00</td><td class="t">Decreciente</td><td>60</td><td>-3.52 %</td><td>87.22</td><td>87.01</td><td>-0.21</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+522.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+522.00</td><td class="t">Decreciente</td><td>60</td><td>-3.41 %</td><td>87.06</td><td>87.06</td><td>-0.00</td><td class="t"><span class="no">No cumple</span></td><td class="t"></td></tr>
+<tr><td>0+524.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+524.00</td><td class="t">Decreciente</td><td>60</td><td>-3.31 %</td><td>86.91</td><td>87.06</td><td>0.15</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+526.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+526.00</td><td class="t">Decreciente</td><td>60</td><td>-3.20 %</td><td>86.75</td><td>87.03</td><td>0.28</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+528.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+528.00</td><td class="t">Decreciente</td><td>60</td><td>-3.09 %</td><td>86.60</td><td>87.05</td><td>0.45</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+530.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+530.00</td><td class="t">Decreciente</td><td>60</td><td>-2.99 %</td><td>86.45</td><td>87.04</td><td>0.59</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+532.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+532.00</td><td class="t">Decreciente</td><td>60</td><td>-2.88 %</td><td>86.30</td><td>87.05</td><td>0.75</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+534.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+534.00</td><td class="t">Decreciente</td><td>60</td><td>-2.77 %</td><td>86.15</td><td>86.99</td><td>0.84</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+536.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+536.00</td><td class="t">Decreciente</td><td>60</td><td>-2.56 %</td><td>85.86</td><td>87.04</td><td>1.18</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+538.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+538.00</td><td class="t">Decreciente</td><td>60</td><td>-2.45 %</td><td>85.71</td><td>87.05</td><td>1.34</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+540.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+540.00</td><td class="t">Decreciente</td><td>60</td><td>-2.35 %</td><td>85.56</td><td>87.02</td><td>1.45</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+542.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+542.00</td><td class="t">Decreciente</td><td>60</td><td>-2.24 %</td><td>85.42</td><td>87.05</td><td>1.63</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+544.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+544.00</td><td class="t">Decreciente</td><td>60</td><td>-2.13 %</td><td>85.28</td><td>87.01</td><td>1.74</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+546.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+546.00</td><td class="t">Decreciente</td><td>60</td><td>-2.03 %</td><td>85.13</td><td>87.06</td><td>1.92</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+548.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+548.00</td><td class="t">Decreciente</td><td>60</td><td>-1.92 %</td><td>84.99</td><td>87.03</td><td>2.04</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+550.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+550.00</td><td class="t">Decreciente</td><td>60</td><td>-1.81 %</td><td>84.85</td><td>87.03</td><td>2.18</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+552.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+552.00</td><td class="t">Decreciente</td><td>60</td><td>-1.71 %</td><td>84.71</td><td>87.03</td><td>2.32</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+554.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+554.00</td><td class="t">Decreciente</td><td>60</td><td>-1.60 %</td><td>84.57</td><td>87.03</td><td>2.46</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+556.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+556.00</td><td class="t">Decreciente</td><td>60</td><td>-1.49 %</td><td>84.44</td><td>87.03</td><td>2.60</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+558.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+558.00</td><td class="t">Decreciente</td><td>60</td><td>-1.39 %</td><td>84.30</td><td>87.03</td><td>2.73</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+560.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+560.00</td><td class="t">Decreciente</td><td>60</td><td>-1.28 %</td><td>84.16</td><td>87.03</td><td>2.87</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+562.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+562.00</td><td class="t">Decreciente</td><td>60</td><td>-1.07 %</td><td>83.89</td><td>87.03</td><td>3.14</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+564.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+564.00</td><td class="t">Decreciente</td><td>60</td><td>-0.96 %</td><td>83.76</td><td>87.03</td><td>3.27</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+566.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+566.00</td><td class="t">Decreciente</td><td>60</td><td>-0.85 %</td><td>83.63</td><td>87.03</td><td>3.41</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+568.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+568.00</td><td class="t">Decreciente</td><td>60</td><td>-0.75 %</td><td>83.49</td><td>87.03</td><td>3.54</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+570.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+570.00</td><td class="t">Decreciente</td><td>60</td><td>-0.64 %</td><td>83.36</td><td>87.03</td><td>3.67</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+572.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+572.00</td><td class="t">Decreciente</td><td>60</td><td>-0.53 %</td><td>83.23</td><td>87.03</td><td>3.80</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+574.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+574.00</td><td class="t">Decreciente</td><td>60</td><td>-0.43 %</td><td>83.10</td><td>87.03</td><td>3.93</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+576.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+576.00</td><td class="t">Decreciente</td><td>60</td><td>-0.32 %</td><td>82.98</td><td>87.03</td><td>4.06</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+578.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+578.00</td><td class="t">Decreciente</td><td>60</td><td>-0.21 %</td><td>82.85</td><td>87.11</td><td>4.26</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+580.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+580.00</td><td class="t">Decreciente</td><td>60</td><td>-0.11 %</td><td>82.72</td><td>87.19</td><td>4.47</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+582.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+582.00</td><td class="t">Decreciente</td><td>60</td><td>-0.00 %</td><td>82.59</td><td>87.42</td><td>4.83</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+584.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+584.00</td><td class="t">Decreciente</td><td>60</td><td>0.11 %</td><td>82.47</td><td>87.66</td><td>5.19</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+586.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+586.00</td><td class="t">Decreciente</td><td>60</td><td>0.21 %</td><td>82.34</td><td>87.97</td><td>5.62</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+588.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+588.00</td><td class="t">Decreciente</td><td>60</td><td>0.32 %</td><td>82.22</td><td>88.36</td><td>6.14</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+590.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+590.00</td><td class="t">Decreciente</td><td>60</td><td>0.43 %</td><td>82.10</td><td>88.75</td><td>6.65</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+592.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+592.00</td><td class="t">Decreciente</td><td>60</td><td>0.64 %</td><td>81.85</td><td>89.30</td><td>7.44</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+594.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+594.00</td><td class="t">Decreciente</td><td>60</td><td>0.75 %</td><td>81.73</td><td>89.84</td><td>8.11</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+596.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+596.00</td><td class="t">Decreciente</td><td>60</td><td>0.85 %</td><td>81.61</td><td>90.39</td><td>8.78</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+598.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+598.00</td><td class="t">Decreciente</td><td>60</td><td>0.96 %</td><td>81.49</td><td>91.09</td><td>9.60</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+600.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+600.00</td><td class="t">Decreciente</td><td>60</td><td>1.07 %</td><td>81.37</td><td>91.80</td><td>10.42</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+602.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+602.00</td><td class="t">Decreciente</td><td>60</td><td>1.17 %</td><td>81.25</td><td>92.50</td><td>11.25</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+604.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+604.00</td><td class="t">Decreciente</td><td>60</td><td>1.28 %</td><td>81.14</td><td>93.36</td><td>12.22</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+606.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+606.00</td><td class="t">Decreciente</td><td>60</td><td>1.39 %</td><td>81.02</td><td>94.22</td><td>13.20</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+608.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+608.00</td><td class="t">Decreciente</td><td>60</td><td>1.49 %</td><td>80.90</td><td>95.08</td><td>14.17</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+610.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+610.00</td><td class="t">Decreciente</td><td>60</td><td>1.60 %</td><td>80.79</td><td>96.02</td><td>15.23</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+612.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+612.00</td><td class="t">Decreciente</td><td>60</td><td>1.71 %</td><td>80.67</td><td>97.03</td><td>16.36</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+614.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+614.00</td><td class="t">Decreciente</td><td>60</td><td>1.81 %</td><td>80.56</td><td>98.05</td><td>17.49</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+616.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+616.00</td><td class="t">Decreciente</td><td>60</td><td>1.92 %</td><td>80.45</td><td>99.14</td><td>18.69</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+618.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+618.00</td><td class="t">Decreciente</td><td>60</td><td>2.03 %</td><td>80.33</td><td>100.23</td><td>19.90</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+620.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+620.00</td><td class="t">Decreciente</td><td>60</td><td>2.13 %</td><td>80.22</td><td>101.41</td><td>21.18</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+622.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+622.00</td><td class="t">Decreciente</td><td>60</td><td>2.24 %</td><td>80.11</td><td>102.58</td><td>22.47</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+624.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+624.00</td><td class="t">Decreciente</td><td>60</td><td>2.35 %</td><td>80.00</td><td>103.75</td><td>23.75</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+626.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+626.00</td><td class="t">Decreciente</td><td>60</td><td>2.56 %</td><td>79.78</td><td>105.00</td><td>25.22</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+628.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+628.00</td><td class="t">Decreciente</td><td>60</td><td>2.67 %</td><td>79.67</td><td>106.25</td><td>26.58</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+630.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+630.00</td><td class="t">Decreciente</td><td>60</td><td>2.77 %</td><td>79.56</td><td>107.58</td><td>28.01</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+632.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+632.00</td><td class="t">Decreciente</td><td>60</td><td>2.88 %</td><td>79.46</td><td>108.91</td><td>29.45</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+634.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+634.00</td><td class="t">Decreciente</td><td>60</td><td>2.99 %</td><td>79.35</td><td>110.23</td><td>30.88</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+636.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+636.00</td><td class="t">Decreciente</td><td>60</td><td>3.09 %</td><td>79.24</td><td>111.64</td><td>32.40</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+638.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+638.00</td><td class="t">Decreciente</td><td>60</td><td>3.20 %</td><td>79.14</td><td>113.05</td><td>33.91</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+640.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+640.00</td><td class="t">Decreciente</td><td>60</td><td>3.31 %</td><td>79.03</td><td>114.45</td><td>35.42</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+642.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+642.00</td><td class="t">Decreciente</td><td>60</td><td>3.41 %</td><td>78.93</td><td>115.86</td><td>36.93</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+644.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+644.00</td><td class="t">Decreciente</td><td>60</td><td>3.52 %</td><td>78.82</td><td>117.34</td><td>38.52</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+646.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+646.00</td><td class="t">Decreciente</td><td>60</td><td>3.63 %</td><td>78.72</td><td>118.83</td><td>40.11</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+648.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+648.00</td><td class="t">Decreciente</td><td>60</td><td>3.73 %</td><td>78.62</td><td>120.31</td><td>41.70</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+650.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+650.00</td><td class="t">Decreciente</td><td>60</td><td>3.84 %</td><td>78.52</td><td>121.88</td><td>43.36</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+652.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+652.00</td><td class="t">Decreciente</td><td>60</td><td>3.95 %</td><td>78.41</td><td>123.36</td><td>44.95</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+654.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+654.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>124.92</td><td>46.56</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+656.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+656.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>126.48</td><td>48.12</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+658.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+658.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>128.12</td><td>49.76</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+660.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+660.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>129.69</td><td>51.32</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+662.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+662.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>131.33</td><td>52.97</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+664.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+664.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>132.89</td><td>54.53</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+666.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+666.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>134.53</td><td>56.17</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+668.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+668.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>136.17</td><td>57.81</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+670.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+670.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>137.89</td><td>59.53</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+672.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+672.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>139.53</td><td>61.17</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+674.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+674.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>141.17</td><td>62.81</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+676.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+676.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>142.89</td><td>64.53</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+678.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+678.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>144.61</td><td>66.25</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+680.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+680.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>146.33</td><td>67.97</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+682.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+682.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>148.05</td><td>69.68</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+684.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+684.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>149.77</td><td>71.40</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+686.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+686.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>151.48</td><td>73.12</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+688.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+688.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>153.20</td><td>74.84</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+690.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+690.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>155.00</td><td>76.64</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+692.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+692.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>156.72</td><td>78.36</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+694.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+694.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>158.52</td><td>80.15</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+696.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+696.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>160.23</td><td>81.87</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+698.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+698.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>162.03</td><td>83.67</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+700.00</td><td class="t">Creciente</td><td>60</td><td>-4.00 %</td><td>87.93</td><td>≥ 263.79</td><td>≥ 175.86</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+<tr><td>0+700.00</td><td class="t">Decreciente</td><td>60</td><td>4.00 %</td><td>78.36</td><td>163.83</td><td>85.47</td><td class="t"><span class="ok">Cumple</span></td><td class="t"></td></tr>
+</table></div>
+<h2>Método</h2><div class="nota">
+<p>DVP requerida: Dp = 0.278·V·tp + V² / (254·((a/9.81) ± i)), con i positiva en subida y negativa en bajada, evaluada en el sentido de circulación. La pendiente se toma sobre toda la longitud de la DVP y el cálculo se itera hasta converger.</p>
+<p>Visibilidad disponible: desde el ojo, ubicado sobre el centro del carril indicado, se avanza el objeto a lo largo del eje y se traza la visual 3D recta. La visual se muestrea contra la superficie; el primer punto en que la superficie supera la visual define el ocultamiento. La distancia informada se mide a lo largo del eje y se refina por bisección a 0.10 m. Las cotas de ojo y objeto se toman de la superficie en su ubicación (incluye peralte) más la altura correspondiente.</p>
+<p>Limitaciones: solo se detectan obstrucciones modeladas en la superficie (no vegetación, muros, señales ni edificaciones que no estén en ella). Las obstrucciones de ancho menor al paso de muestreo pueden no detectarse. Los valores deben contrastarse con la norma vigente del proyecto.</p>
+</div>
+</body></html>

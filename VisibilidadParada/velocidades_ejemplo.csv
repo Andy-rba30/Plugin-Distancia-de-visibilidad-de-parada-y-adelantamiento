@@ -1,0 +1,6 @@
+# Velocidad de diseño por tramo: progresiva_inicio;progresiva_fin;V (km/h)[;Da (m) opcional]
+# Acepta progresivas en metros (1500.5) o en formato km (1+500.50). Las líneas con # se ignoran.
+prog_inicio;prog_fin;V;Da
+0+000;2+350;80;410
+2+350;4+800;60;290
+4+800;7+120;80;410

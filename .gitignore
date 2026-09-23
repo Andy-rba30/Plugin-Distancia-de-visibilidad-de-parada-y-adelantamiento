@@ -1,0 +1,8 @@
+# Salidas de compilación .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.dll
+*.pdb
