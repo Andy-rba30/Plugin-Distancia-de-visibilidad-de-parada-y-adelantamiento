@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Paquete de carga automática para Civil 3D. Se copia a %APPDATA%\Autodesk\ApplicationPlugins\VisibilidadParada.bundle -->
+<ApplicationPackage SchemaVersion="1.0"
+                    AutodeskProduct="Civil 3D"
+                    ProductType="Application"
+                    Name="VisibilidadParada"
+                    AppVersion="1.0.0"
+                    Description="Verificación de visibilidad de parada, adelantamiento y curvas verticales (pestaña ARBA)"
+                    Author="ARBA"
+                    ProductCode="{8A42B6AB-7A07-4312-A4BE-5544254C08BD}"
+                    UpgradeCode="{D6BA9C62-420D-41B3-B917-853F8C1BCB1F}">
+  <CompanyDetails Name="ARBA" />
+  <Components Description="Civil 3D 2027 (.NET 10)">
+    <RuntimeRequirements OS="Win64" Platform="AutoCAD*" />
+    <ComponentEntry AppName="VisibilidadParada"
+                    Version="1.0.0"
+                    ModuleName="./Contents/VisibilidadParada.dll"
+                    AppDescription="Comandos VISCURVAS y VISPARADA en la pestaña ARBA"
+                    LoadOnAutoCADStartup="True"
+                    LoadOnCommandInvocation="False">
+      <Commands GroupName="ARBA_VISIBILIDAD">
+        <Command Global="VISCURVAS" Local="VISCURVAS" />
+        <Command Global="VISPARADA" Local="VISPARADA" />
+      </Commands>
+    </ComponentEntry>
+  </Components>
+</ApplicationPackage>

@@ -15,12 +15,35 @@ Ambos generan **un solo informe HTML** y el detalle en CSV para Excel.
    - `accoremgd.dll`, `acdbmgd.dll`, `acmgd.dll` (carpeta raíz)
    - `ACA\AecBaseMgd.dll`
    - `C3D\AeccDbMgd.dll`
-4. Compila en **Release | x64**. Obtendrás `bin\x64\Release\VisibilidadParada.dll` o `bin\Release\VisibilidadParada.dll`.
+   - `AdWindows.dll` (carpeta raíz), para la pestaña de la cinta
+4. Compila en **Release | x64**. Obtendrás `bin\x64\Release\VisibilidadParada.dll` o `bin\Release\VisibilidadParada.dll`. Al terminar, la compilación copia sola el plugin al paquete de carga automática (ver sección 2).
 
-## 2. Cargar en Civil 3D
+## 2. Instalar en Civil 3D (pestaña ARBA)
 
-- Para cargarlo manualmente, escribe `NETLOAD` y selecciona `VisibilidadParada.dll`.
-- Para cargarlo siempre, agrégalo a la carga automática. Una opción es crear un paquete en `%APPDATA%\Autodesk\ApplicationPlugins`; otra es poner `(command "NETLOAD" "ruta\\VisibilidadParada.dll")` en `acaddoc.lsp`. Si la DLL no está en una ruta de confianza, AutoCAD mostrará una advertencia de seguridad. Agrega la carpeta en `TRUSTEDPATHS`.
+Al cargarse, el plugin crea en la cinta una pestaña **ARBA** con el panel **Visibilidad** y dos botones: *Curvas verticales* (VISCURVAS) y *Visibilidad de parada* (VISPARADA).
+
+**Instalación automática (recomendada).** Con Civil 3D cerrado, abre PowerShell en esta carpeta y ejecuta:
+
+```powershell
+.\instalar.ps1
+```
+
+El script compila el proyecto y copia la DLL y `Bundle\PackageContents.xml` a `%APPDATA%\Autodesk\ApplicationPlugins\VisibilidadParada.bundle`. Esa carpeta es de confianza para AutoCAD, así que no aparece la advertencia de seguridad y el plugin se carga solo cada vez que abres Civil 3D. Si PowerShell bloquea el script, ejecútalo con `powershell -ExecutionPolicy Bypass -File .\instalar.ps1`.
+
+Compilar desde Visual Studio hace lo mismo: el `.csproj` tiene un paso posterior a la compilación que copia los archivos al paquete. Si Civil 3D está abierto, la copia falla porque la DLL está en uso; ciérralo y vuelve a compilar. Para desactivar ese paso, pon `InstalarEnBundle` en `false` en el `.csproj`.
+
+**Carga manual (para probar).** Escribe `NETLOAD` y selecciona `VisibilidadParada.dll`. La pestaña ARBA aparece al instante, pero solo dura esa sesión.
+
+**Desinstalar.** Borra la carpeta `VisibilidadParada.bundle` de `%APPDATA%\Autodesk\ApplicationPlugins`.
+
+### Poner otros plugins en la pestaña ARBA
+
+La pestaña se identifica por el Id `ARBA_PESTANA` y el título `ARBA`. Cualquier otro plugin puede añadir sus botones a la misma pestaña sin duplicarla:
+
+- Si el otro plugin referencia `VisibilidadParada.dll`, usa directamente `CintaArba.ObtenerPanel("MI_PANEL", "Mi panel")` y `CintaArba.AgregarBoton(...)` desde su `IExtensionApplication.Initialize`.
+- Si prefieres que sea independiente, copia `Civil\Cinta.cs` al otro proyecto y cambia el contenido de `CrearBotonesVisibilidad()` por tus propios botones. Como `ObtenerPestana()` busca primero una pestaña con ese Id o título, todos los plugins terminan en la misma pestaña ARBA, cada uno con su panel.
+
+Cada plugin lleva su propio `PackageContents.xml` con `LoadOnAutoCADStartup="True"` para que su panel aparezca al abrir Civil 3D y no solo al ejecutar un comando.
 
 ## 3. Uso
 
@@ -126,4 +149,7 @@ Nucleo/   Cálculo e informe, sin dependencias de Autodesk
 Civil/    Conexión con Civil 3D
   Adaptadores.cs  Alineamiento, perfil (incluida la lectura de PVI y curvas) y superficie
   Comando.cs      Comandos VISPARADA y VISCURVAS, solicitudes, dibujo de sectores
+  Cinta.cs        Pestaña ARBA de la cinta (compartible con otros plugins) y arranque del plugin
+Bundle/   PackageContents.xml para la carga automática (ApplicationPlugins)
+instalar.ps1  Compila e instala el paquete de carga automática
 ```

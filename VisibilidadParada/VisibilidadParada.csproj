@@ -10,11 +10,19 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <!-- Ajuste esta ruta si Civil 3D está instalado en otra carpeta -->
   <PropertyGroup>
     <C3DPath>C:\Program Files\Autodesk\AutoCAD 2027</C3DPath>
+  </PropertyGroup>
+
+  <!-- Al compilar, copia la DLL y PackageContents.xml al paquete de carga automática.
+       Ponga InstalarEnBundle=false para desactivarlo (o compile con -p:InstalarEnBundle=false). -->
+  <PropertyGroup>
+    <InstalarEnBundle>true</InstalarEnBundle>
+    <CarpetaBundle>$(APPDATA)\Autodesk\ApplicationPlugins\VisibilidadParada.bundle</CarpetaBundle>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,6 +51,23 @@
       <HintPath>$(C3DPath)\C3D\AeccDbMgd.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <!-- Cinta (ribbon): pestaña ARBA -->
+    <Reference Include="AdWindows">
+      <HintPath>$(C3DPath)\AdWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Bundle\PackageContents.xml" />
+  </ItemGroup>
+
+  <Target Name="InstalarBundle" AfterTargets="Build"
+          Condition="'$(InstalarEnBundle)' == 'true' And '$(OS)' == 'Windows_NT'">
+    <MakeDir Directories="$(CarpetaBundle)\Contents" ContinueOnError="true" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\Bundle\PackageContents.xml" DestinationFolder="$(CarpetaBundle)" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(CarpetaBundle)\Contents" ContinueOnError="true" />
+    <Message Importance="high" Text="Plugin instalado en $(CarpetaBundle). Si Civil 3D estaba abierto, reinícialo." />
+  </Target>
 
 </Project>
