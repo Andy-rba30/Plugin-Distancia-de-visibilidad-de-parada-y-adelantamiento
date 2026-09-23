@@ -11,3 +11,9 @@ obj/
 .venv/
 __pycache__/
 *.pyc
+
+# Restos de trabajo local
+patch_*.py
+resize_icons.py
+captura_*.png
+open_dwg*.py

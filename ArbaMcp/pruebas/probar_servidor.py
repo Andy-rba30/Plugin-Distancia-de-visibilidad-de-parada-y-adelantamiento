@@ -1,4 +1,4 @@
-﻿import httpx
+import httpx
 import os
 import sys
 
@@ -50,5 +50,5 @@ test_req("Comando REGEN (Terminado)", "POST", "/execute", {"X-Arba-Token": TOKEN
 test_req("Comando INEXISTENTE (No iniciado)", "POST", "/execute", {"X-Arba-Token": TOKEN, "Content-Type": "application/json"}, {"tool": "ejecutar_comando", "args": {"comando": "COMANDOINEXISTENTE123"}})
 
 # 7. Comando _.LINE
-test_req("Comando _.LINE (Timeout con ESC)", "POST", "/execute", {"X-Arba-Token": TOKEN, "Content-Type": "application/json"}, {"tool": "ejecutar_comando", "args": {"comando": "_.LINE"}, "timeout_s": 5})
+test_req("Comando _.LINE (Timeout con ESC)", "POST", "/execute", {"X-Arba-Token": TOKEN, "Content-Type": "application/json"}, {"tool": "ejecutar_comando", "args": {"comando": "_.LINE", "timeout_s": 5}, "timeout_s": 5})
 

@@ -139,15 +139,6 @@ namespace ArbaMcp
                         if (idx > 0) headers[l.Substring(0, idx).Trim()] = l.Substring(idx + 1).Trim();
                     }
 
-                    if (headers.ContainsKey("Origin")) { await Responder(ns, 403, Error("Forbidden")); return; }
-                    
-                    if (!headers.TryGetValue("Host", out string host) || (host != "127.0.0.1:" + Puerto && host != "localhost:" + Puerto)) { await Responder(ns, 400, Error("Bad Request")); return; }
-                    
-                    if (!headers.TryGetValue("X-Arba-Token", out string tokenReq) || tokenReq != TokenActual) { await Responder(ns, 401, Error("Unauthorized")); return; }
-                    
-                    if (metodo == "POST" && (!headers.TryGetValue("Content-Type", out string ct) || !ct.StartsWith("application/json", StringComparison.OrdinalIgnoreCase))) { await Responder(ns, 415, Error("Unsupported Media Type")); return; }
-
-
                     // 2. Cuerpo
                     int inicioCuerpo = finCab + 4;
                     var cuerpo = new MemoryStream();
@@ -159,6 +150,16 @@ namespace ArbaMcp
                         cuerpo.Write(tmp, 0, n);
                     }
                     string textoCuerpo = Encoding.UTF8.GetString(cuerpo.GetBuffer(), 0, (int)Math.Min(cuerpo.Length, largo));
+
+                    // Las validaciones van DESPUÉS de leer el cuerpo: si se cierra la conexión con bytes
+                    // sin leer, Windows envía un reset y el cliente ve un error en vez del 401/403/415.
+                    if (headers.ContainsKey("Origin")) { await Responder(ns, 403, Error("Forbidden")); return; }
+                    
+                    if (!headers.TryGetValue("Host", out string host) || (host != "127.0.0.1:" + Puerto && host != "localhost:" + Puerto)) { await Responder(ns, 400, Error("Bad Request")); return; }
+                    
+                    if (!headers.TryGetValue("X-Arba-Token", out string tokenReq) || tokenReq != TokenActual) { await Responder(ns, 401, Error("Unauthorized")); return; }
+                    
+                    if (metodo == "POST" && (!headers.TryGetValue("Content-Type", out string ct) || !ct.StartsWith("application/json", StringComparison.OrdinalIgnoreCase))) { await Responder(ns, 415, Error("Unsupported Media Type")); return; }
 
                     // 3. Enrutado
                     if (metodo == "OPTIONS") { await Responder(ns, 204, ""); return; }
@@ -218,7 +219,7 @@ namespace ArbaMcp
                     tareaPrincipal = HiloPrincipal.Ejecutar(() => herramienta.Ejecutar(args));
                 }
 
-                var terminada = await Task.WhenAny(tareaPrincipal, Task.Delay(TimeSpan.FromSeconds(timeoutS)));
+                var terminada = await Task.WhenAny(tareaPrincipal, Task.Delay(TimeSpan.FromSeconds(timeoutS + 5)));
                 if (terminada != tareaPrincipal)
                     return Error("Tiempo agotado (" + timeoutS + " s). Civil 3D puede estar ocupado o con un cuadro de diálogo abierto.");
                 object resultado = await tareaPrincipal;
