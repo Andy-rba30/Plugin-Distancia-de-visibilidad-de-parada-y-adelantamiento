@@ -1,0 +1,372 @@
+<Window x:Class="VisibilidadParada.Civil.VentanaVisibilidad"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Verificación de visibilidad de parada y adelantamiento"
+        Width="1000" Height="720" MinWidth="840" MinHeight="580"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        FontFamily="Segoe UI" FontSize="12" Background="#F7F7F7">
+  <Window.Resources>
+    <Style TargetType="TextBox">
+      <Setter Property="Margin" Value="0,2,0,6"/>
+      <Setter Property="Padding" Value="3,2"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="ComboBox">
+      <Setter Property="Margin" Value="0,2,0,6"/>
+    </Style>
+    <Style TargetType="Label">
+      <Setter Property="Padding" Value="0,3,8,0"/>
+    </Style>
+    <Style TargetType="CheckBox">
+      <Setter Property="Margin" Value="0,4,0,4"/>
+    </Style>
+    <Style x:Key="Titulo" TargetType="TextBlock">
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="Foreground" Value="#1F4E79"/>
+      <Setter Property="Margin" Value="0,10,0,4"/>
+    </Style>
+    <Style x:Key="Nota" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="#555555"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="Margin" Value="0,0,0,6"/>
+    </Style>
+    <Style x:Key="Ref" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="#777777"/>
+      <Setter Property="Margin" Value="8,4,0,0"/>
+    </Style>
+    <Style x:Key="BotonChico" TargetType="Button">
+      <Setter Property="Margin" Value="6,2,0,6"/>
+      <Setter Property="Padding" Value="8,2"/>
+      <Setter Property="MinWidth" Value="32"/>
+    </Style>
+  </Window.Resources>
+
+  <DockPanel Margin="10">
+    <!-- Barra inferior: estado, progreso y botones -->
+    <Grid DockPanel.Dock="Bottom" Margin="0,8,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+        <TextBlock x:Name="txtEstado" Text="" Foreground="#555555"/>
+        <ProgressBar x:Name="barra" Height="8" Margin="0,4,0,0" Visibility="Collapsed"/>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal">
+        <Button x:Name="btnAnalizar" Content="Analizar" Width="110" Height="28" Margin="0,0,8,0" Click="Analizar_Click" IsDefault="True"/>
+        <Button x:Name="btnCancelar" Content="Cancelar análisis" Width="120" Height="28" Margin="0,0,8,0" Click="Cancelar_Click" Visibility="Collapsed"/>
+        <Button x:Name="btnCerrar" Content="Cerrar" Width="90" Height="28" Click="Cerrar_Click" IsCancel="True"/>
+      </StackPanel>
+    </Grid>
+
+    <TabControl x:Name="tabs" TabStripPlacement="Left" Padding="8">
+      <TabControl.Resources>
+        <Style TargetType="TabItem">
+          <Setter Property="Padding" Value="14,8"/>
+          <Setter Property="FontSize" Value="12.5"/>
+        </Style>
+      </TabControl.Resources>
+
+      <!-- ============================ GENERAL ============================ -->
+      <TabItem Header="General">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="10,4,10,10">
+            <TextBlock Style="{StaticResource Titulo}" Text="Objetos del dibujo"/>
+            <TextBlock Style="{StaticResource Nota}" Text="Elige el alineamiento y el perfil de rasante que se van a verificar. Puedes elegirlos de la lista o señalarlos en pantalla."/>
+
+            <Label Content="Alineamiento:"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <ComboBox x:Name="cbAlineamiento" DisplayMemberPath="Nombre" SelectionChanged="Alineamiento_Changed"/>
+              <Button Grid.Column="1" Content="Seleccionar en pantalla" Style="{StaticResource BotonChico}" Click="SelAlineamiento_Click"/>
+            </Grid>
+
+            <Label Content="Perfil de rasante:"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <ComboBox x:Name="cbPerfil" DisplayMemberPath="Nombre" SelectionChanged="Perfil_Changed"/>
+              <Button Grid.Column="1" Content="Seleccionar en pantalla" Style="{StaticResource BotonChico}" Click="SelPerfil_Click"/>
+            </Grid>
+
+            <TextBlock Style="{StaticResource Titulo}" Text="Rango de progresivas"/>
+            <CheckBox x:Name="chkTodo" Content="Analizar todo el perfil" IsChecked="True" Checked="Todo_Changed" Unchecked="Todo_Changed"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Label Content="Inicio:"/>
+              <TextBox x:Name="txtInicio" Grid.Column="1" IsEnabled="False"/>
+              <Label Content="Fin:" Grid.Column="2" Margin="12,0,0,0"/>
+              <TextBox x:Name="txtFin" Grid.Column="3" IsEnabled="False"/>
+              <TextBlock Grid.Column="4" Style="{StaticResource Ref}" Text="en metros o en formato km (2+350.00)"/>
+            </Grid>
+
+            <TextBlock Style="{StaticResource Titulo}" Text="Informe"/>
+            <Label Content="Archivo del informe HTML (los CSV para Excel se guardan al lado):"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBox x:Name="txtRuta"/>
+              <Button Grid.Column="1" Content="..." Style="{StaticResource BotonChico}" Click="ElegirRuta_Click"/>
+            </Grid>
+            <CheckBox x:Name="chkAbrir" Content="Abrir el informe HTML al terminar" IsChecked="True"/>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- ============================ PARÁMETROS ============================ -->
+      <TabItem Header="Parámetros">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="10,4,10,10">
+            <TextBlock Style="{StaticResource Titulo}" Text="Velocidad de diseño"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Label Content="Velocidad de diseño V (km/h):"/>
+              <TextBox x:Name="txtV" Grid.Column="1"/>
+              <TextBlock Grid.Column="2" Style="{StaticResource Ref}" Text="se usa donde no haya tramo definido"/>
+            </Grid>
+            <CheckBox x:Name="chkTramos" Content="Usar velocidades por tramo desde un archivo (prog_inicio;prog_fin;V[;Da])" Checked="Tramos_Changed" Unchecked="Tramos_Changed"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBox x:Name="txtArchivoTramos" IsEnabled="False"/>
+              <Button x:Name="btnArchivoTramos" Grid.Column="1" Content="..." Style="{StaticResource BotonChico}" Click="ElegirTramos_Click" IsEnabled="False"/>
+            </Grid>
+            <TextBlock x:Name="txtTramosInfo" Style="{StaticResource Nota}" Text=""/>
+
+            <TextBlock Style="{StaticResource Titulo}" Text="Distancia de visibilidad de parada"/>
+            <TextBlock Style="{StaticResource Nota}" Text="No se ingresa una visibilidad mínima: Dp se calcula en cada PVI con Dp = 0.278·V·tp + V²/(254·(a/9.81 ± i)), de ida y de regreso, usando las pendientes de entrada y salida, y se toma el mayor valor."/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+              </Grid.RowDefinitions>
+              <Label Content="Tiempo de percepción-reacción tp (s):" Grid.Row="0"/>
+              <TextBox x:Name="txtTp" Grid.Row="0" Grid.Column="1"/>
+              <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="ref. DG-2018: 2.5"/>
+              <Label Content="Tasa de desaceleración a (m/s²):" Grid.Row="1"/>
+              <TextBox x:Name="txtA" Grid.Row="1" Grid.Column="1"/>
+              <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Ref}" Text="ref. DG-2018: 3.4"/>
+              <Label Content="Altura del ojo (m):" Grid.Row="2"/>
+              <TextBox x:Name="txtOjo" Grid.Row="2" Grid.Column="1"/>
+              <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource Ref}" Text="ref. DG-2018: 1.07"/>
+              <Label Content="Altura del objeto (m):" Grid.Row="3"/>
+              <TextBox x:Name="txtObjeto" Grid.Row="3" Grid.Column="1"/>
+              <TextBlock Grid.Row="3" Grid.Column="2" Style="{StaticResource Ref}" Text="ref. DG-2018: 0.15"/>
+            </Grid>
+
+            <TextBlock Style="{StaticResource Titulo}" Text="Curvas verticales"/>
+            <Label Content="Longitud mínima de curva por visibilidad:"/>
+            <RadioButton x:Name="rbFormula" IsChecked="True" Margin="4,2,0,2" Content="Fórmula: usa la L del caso Dp &lt; L si resulta mayor o igual a Dp; si no, la del caso Dp &gt; L (selección normativa)"/>
+            <RadioButton x:Name="rbMaximo" Margin="4,2,0,6" Content="Máximo: toma la mayor de las dos longitudes (más conservador; es lo que hace una hoja de cálculo que toma el máximo)"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+              </Grid.RowDefinitions>
+              <Label Content="Diferencia algebraica A (%) que exige curva:" Grid.Row="0"/>
+              <TextBox x:Name="txtUmbralA" Grid.Row="0" Grid.Column="1"/>
+              <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="los PVI sin curva con A mayor o igual se marcan NO CUMPLE"/>
+              <Label Content="Longitud mínima absoluta de curva (m):" Grid.Row="1"/>
+              <TextBox x:Name="txtLMin" Grid.Row="1" Grid.Column="1"/>
+              <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Ref}" Text="0 = no aplicar; la L exigida es la mayor entre esta y la de visibilidad"/>
+            </Grid>
+
+            <TextBlock Style="{StaticResource Titulo}" Text="Distancia de visibilidad de adelantamiento"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+              </Grid.RowDefinitions>
+              <Label Content="Da (m):" Grid.Row="0"/>
+              <TextBox x:Name="txtDa" Grid.Row="0" Grid.Column="1"/>
+              <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="0 = no evaluar adelantamiento; solo aplica en curvas convexas"/>
+              <Label Content="Altura del objeto para adelantamiento (m):" Grid.Row="1"/>
+              <TextBox x:Name="txtObjetoDa" Grid.Row="1" Grid.Column="1"/>
+              <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Ref}" Text="ref. DG-2018: 1.30"/>
+            </Grid>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- ============================ SUPERFICIE (OPCIONAL) ============================ -->
+      <TabItem Header="Superficie (opcional)">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="10,4,10,10">
+            <TextBlock Style="{StaticResource Titulo}" Text="Comprobación contra superficie"/>
+            <CheckBox x:Name="chkSuperficie" Content="Verificar además la visibilidad de parada a lo largo del eje contra una superficie de obstrucción" Checked="Superficie_Changed" Unchecked="Superficie_Changed"/>
+            <TextBlock Style="{StaticResource Nota}" Text="Opcional. Mide la visibilidad disponible en cada progresiva y en ambos sentidos con una visual 3D contra la superficie del corredor (con taludes), y la compara con la DVP requerida. Detecta también los taludes en curvas horizontales. Tarda más que el análisis por curvas."/>
+            <StackPanel x:Name="pnlSuperficie" IsEnabled="False">
+              <Label Content="Superficie de obstrucción (corredor con taludes):"/>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="cbSuperficie" DisplayMemberPath="Nombre"/>
+                <Button Grid.Column="1" Content="Seleccionar en pantalla" Style="{StaticResource BotonChico}" Click="SelSuperficie_Click"/>
+              </Grid>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="300"/>
+                  <ColumnDefinition Width="140"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition/>
+                  <RowDefinition/>
+                  <RowDefinition/>
+                  <RowDefinition/>
+                  <RowDefinition/>
+                  <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Content="Desfase del carril, sentido creciente (m):" Grid.Row="0"/>
+                <TextBox x:Name="txtDesfC" Grid.Row="0" Grid.Column="1"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource Ref}" Text="centro de carril; + derecha del eje"/>
+                <Label Content="Desfase del carril, sentido decreciente (m):" Grid.Row="1"/>
+                <TextBox x:Name="txtDesfD" Grid.Row="1" Grid.Column="1"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Ref}" Text="normalmente negativo (izquierda del eje)"/>
+                <Label Content="Intervalo entre progresivas (m):" Grid.Row="2"/>
+                <TextBox x:Name="txtIntervalo" Grid.Row="2" Grid.Column="1"/>
+                <Label Content="Sentido de análisis:" Grid.Row="3"/>
+                <ComboBox x:Name="cbSentido" Grid.Row="3" Grid.Column="1" SelectedIndex="0">
+                  <ComboBoxItem Content="Ambos"/>
+                  <ComboBoxItem Content="Creciente"/>
+                  <ComboBoxItem Content="Decreciente"/>
+                </ComboBox>
+                <Label Content="Criterio de pendiente:" Grid.Row="4"/>
+                <ComboBox x:Name="cbCriterio" Grid.Row="4" Grid.Column="1" SelectedIndex="0">
+                  <ComboBoxItem Content="Desfavorable"/>
+                  <ComboBoxItem Content="Promedio"/>
+                </ComboBox>
+                <TextBlock Grid.Row="4" Grid.Column="2" Style="{StaticResource Ref}" Text="Desfavorable: menor pendiente dentro de la DVP. Promedio: pendiente media"/>
+                <Label Content="Precisión del muestreo:" Grid.Row="5"/>
+                <ComboBox x:Name="cbPrecision" Grid.Row="5" Grid.Column="1" SelectedIndex="0">
+                  <ComboBoxItem Content="Normal"/>
+                  <ComboBoxItem Content="Fina"/>
+                  <ComboBoxItem Content="Rápida"/>
+                </ComboBox>
+                <TextBlock Grid.Row="5" Grid.Column="2" Style="{StaticResource Ref}" Text="Normal 1 m / 5 m · Fina 0.5 m / 2.5 m · Rápida 2 m / 10 m"/>
+              </Grid>
+              <CheckBox x:Name="chkDibujar" Content="Dibujar en planta los sectores que no cumplen (capas VIS-PARADA-DEF-CRECIENTE y VIS-PARADA-DEF-DECRECIENTE)" IsChecked="True"/>
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- ============================ RESULTADOS ============================ -->
+      <TabItem Header="Resultados" x:Name="tabResultados">
+        <Grid Margin="10,4,10,4">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+
+          <Border x:Name="bordeVeredicto" Background="#EEEEEE" BorderBrush="#999999" BorderThickness="2" CornerRadius="6" Padding="12,8" Margin="0,4,0,6">
+            <StackPanel>
+              <TextBlock x:Name="txtVeredicto" FontSize="18" FontWeight="Bold" Foreground="#555555" Text="Sin analizar"/>
+              <TextBlock x:Name="txtMotivos" TextWrapping="Wrap" Margin="0,4,0,0" Text="Configura los datos y pulsa Analizar."/>
+            </StackPanel>
+          </Border>
+
+          <TextBlock Grid.Row="1" Style="{StaticResource Titulo}" Margin="0,2,0,4" Text="Curvas verticales: visibilidad de parada y adelantamiento"/>
+          <DataGrid x:Name="gridCurvas" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                    HeadersVisibility="Column" GridLinesVisibility="All" AlternatingRowBackground="#F5F7FA"
+                    FrozenColumnCount="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                    SelectionUnit="FullRow" FontSize="11.5">
+            <DataGrid.RowStyle>
+              <Style TargetType="DataGridRow">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding Cumple}" Value="False">
+                    <Setter Property="Foreground" Value="#B3261E"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="N°" Binding="{Binding N}"/>
+              <DataGridTextColumn Header="Ubicación" Binding="{Binding Ubicacion}"/>
+              <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}"/>
+              <DataGridTextColumn Header="V" Binding="{Binding V}"/>
+              <DataGridTextColumn Header="Pe (%)" Binding="{Binding Pe}"/>
+              <DataGridTextColumn Header="Ps (%)" Binding="{Binding Ps}"/>
+              <DataGridTextColumn Header="A (%)" Binding="{Binding A}"/>
+              <DataGridTextColumn Header="Dp (m)" Binding="{Binding Dp}"/>
+              <DataGridTextColumn Header="L mín (m)" Binding="{Binding LReq}"/>
+              <DataGridTextColumn Header="L proy. (m)" Binding="{Binding LProyecto}"/>
+              <DataGridTextColumn Header="K mín" Binding="{Binding KReq}"/>
+              <DataGridTextColumn Header="K proy." Binding="{Binding KProyecto}"/>
+              <DataGridTextColumn Header="Parada" Binding="{Binding Estado}"/>
+              <DataGridTextColumn Header="Da (m)" Binding="{Binding Da}"/>
+              <DataGridTextColumn Header="L adel. (m)" Binding="{Binding LDaReq}"/>
+              <DataGridTextColumn Header="¿Adelanta?" Binding="{Binding Adelanta}"/>
+              <DataGridTextColumn Header="Verificación" Binding="{Binding Verificacion}" MinWidth="320"/>
+            </DataGrid.Columns>
+          </DataGrid>
+
+          <TextBlock x:Name="lblSectores" Grid.Row="3" Style="{StaticResource Titulo}" Margin="0,8,0,4" Text="Sectores del eje sin visibilidad de parada suficiente" Visibility="Collapsed"/>
+          <DataGrid x:Name="gridSectores" Grid.Row="4" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                    HeadersVisibility="Column" GridLinesVisibility="All" AlternatingRowBackground="#F5F7FA"
+                    MaxHeight="150" VerticalScrollBarVisibility="Auto" Visibility="Collapsed" FontSize="11.5">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Sentido" Binding="{Binding Sentido}"/>
+              <DataGridTextColumn Header="Inicio" Binding="{Binding Inicio}"/>
+              <DataGridTextColumn Header="Fin" Binding="{Binding Fin}"/>
+              <DataGridTextColumn Header="Longitud (m)" Binding="{Binding Longitud}"/>
+              <DataGridTextColumn Header="DVP máx. (m)" Binding="{Binding DvpMax}"/>
+              <DataGridTextColumn Header="Vis. disp. mín. (m)" Binding="{Binding DisponibleMin}"/>
+              <DataGridTextColumn Header="Déficit máx. (m)" Binding="{Binding DeficitMax}"/>
+            </DataGrid.Columns>
+          </DataGrid>
+
+          <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,8,0,0">
+            <Button x:Name="btnAbrirHtml" Content="Abrir informe HTML" Padding="10,3" Margin="0,0,8,0" Click="AbrirHtml_Click" IsEnabled="False"/>
+            <Button x:Name="btnAbrirCarpeta" Content="Abrir carpeta" Padding="10,3" Margin="0,0,8,0" Click="AbrirCarpeta_Click" IsEnabled="False"/>
+            <TextBlock x:Name="txtArchivos" VerticalAlignment="Center" Foreground="#555555" Text=""/>
+          </StackPanel>
+        </Grid>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>

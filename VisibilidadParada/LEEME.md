@@ -1,11 +1,16 @@
 # VisibilidadParada: plugin para Civil 3D 2027
 
-Este plugin agrega dos comandos:
+Un solo comando, **VISIBILIDAD**, con un cuadro de diálogo al estilo de la *Comprobación de visibilidad* de Civil 3D:
 
-- **VISCURVAS**: lee la geometría del perfil (PVI y curvas verticales) y verifica cada curva por visibilidad de parada y, opcionalmente, de adelantamiento. Reproduce el análisis típico en Excel (Pe, Ps, A, tipo, Dp de ida y regreso, L por Dp > L y Dp < L) y lo compara con la curva proyectada. No necesita superficie y es instantáneo.
-- **VISPARADA**: hace todo lo anterior y además verifica la DVP en cada progresiva del eje, en ambos sentidos, midiendo la visibilidad disponible contra la superficie del corredor. Así detecta también los taludes en curvas horizontales.
+1. Eliges el alineamiento y el perfil de rasante (de una lista o señalándolos en pantalla).
+2. Configuras los parámetros: velocidad de diseño, tp, a, alturas de ojo y objeto, criterio de longitud de curva, umbral de A, longitud mínima absoluta y distancia de adelantamiento.
+3. Pulsas **Analizar** y ves la tabla de curvas verticales con su veredicto CUMPLE / NO CUMPLE, además del informe HTML y los CSV para Excel.
 
-Ambos generan **un solo informe HTML** y el detalle en CSV para Excel.
+No se ingresa una "visibilidad mínima" como en Civil 3D: el análisis es por curvas, y la Dp se calcula en cada PVI con la fórmula de la DG-2018 a partir de V, tp, a y las pendientes de entrada y salida.
+
+Como opción, en la pestaña *Superficie (opcional)* se puede activar además la comprobación de la DVP en cada progresiva del eje contra la superficie del corredor, en ambos sentidos, para detectar también los taludes en curvas horizontales.
+
+Los comandos de línea **VISCURVAS** y **VISPARADA** siguen disponibles para quien prefiera trabajar sin ventana; hacen lo mismo pidiendo los datos uno por uno.
 
 ## 1. Compilar
 
@@ -20,7 +25,7 @@ Ambos generan **un solo informe HTML** y el detalle en CSV para Excel.
 
 ## 2. Instalar en Civil 3D (pestaña ARBA)
 
-Al cargarse, el plugin crea en la cinta una pestaña **ARBA** con el panel **Visibilidad** y dos botones: *Curvas verticales* (VISCURVAS) y *Visibilidad de parada* (VISPARADA).
+Al cargarse, el plugin crea en la cinta una pestaña **ARBA** (al final, después de las de Civil 3D) con el panel **Visibilidad** y el botón *Visibilidad de parada*, que ejecuta VISIBILIDAD.
 
 **Instalación automática (recomendada).** Con Civil 3D cerrado, abre PowerShell en esta carpeta y ejecuta:
 
@@ -47,53 +52,38 @@ Cada plugin lleva su propio `PackageContents.xml` con `LoadOnAutoCADStartup="Tru
 
 ## 3. Uso
 
-Escribe `VISCURVAS` o `VISPARADA`. **No hay nada precargado.** Cada ejecución empieza desde cero, así que debes seleccionar el perfil e ingresar todos los valores. Enter vacío no se acepta. Donde aplica, el mensaje muestra el valor de referencia de la DG-2018 solo como guía; igual tienes que escribirlo.
+Pulsa el botón de la pestaña ARBA o escribe `VISIBILIDAD`. Se abre una ventana con cuatro pestañas:
 
-**Selección de objetos**
+**General**
 
-1. **Alineamiento**: se selecciona en planta.
-2. **Perfil de rasante**: haz clic sobre la línea del perfil en la vista de perfil. Si prefieres elegirlo de una lista numerada, escribe `L` (opción `Lista`). El plugin comprueba que el perfil pertenezca al alineamiento seleccionado; si no, lo vuelve a pedir.
-3. **Superficie de obstrucción** (solo VISPARADA): usa la superficie del corredor con taludes (Top + daylight). Si seleccionas el terreno natural, las cotas de ojo y objeto saldrán mal en rellenos.
+- **Alineamiento** y **Perfil de rasante**: listas desplegables con los objetos del dibujo. El botón *Seleccionar en pantalla* oculta la ventana para señalar el objeto; si señalas un perfil, el alineamiento se ajusta solo. Se preselecciona el primer perfil que no sea de terreno (EG).
+- **Rango de progresivas**: por defecto todo el perfil. Se puede acotar en metros o en formato km (2+350.00).
+- **Informe**: ruta del HTML. Los CSV se guardan al lado con los sufijos `_curvas.csv` y, si hay superficie, `_progresivas.csv`.
 
-**Datos que se piden**
+**Parámetros**
 
-| Solicitud | Referencia mostrada | Comentario |
+| Campo | Referencia mostrada | Comentario |
 |---|---|---|
-| Velocidad de diseño (km/h) | — | Opción `Archivo` para cargar velocidades por tramo (ver `velocidades_ejemplo.csv`). Luego pide la velocidad para progresivas no cubiertas |
+| Velocidad de diseño (km/h) | — | Opción de cargar velocidades por tramo desde archivo (ver `velocidades_ejemplo.csv`). La velocidad ingresada se usa en las progresivas no cubiertas |
 | tp (s) / a (m/s²) | 2.5 / 3.4 | Fórmula DG-2018 / AASHTO |
 | Altura ojo / objeto (m) | 1.07 / 0.15 | |
-| Longitud de curva vertical | — | `Formula`: usa L de Dp < L si resulta ≥ Dp; si no, la de Dp > L (selección normativa). `Maximo`: toma la mayor de ambas (más conservador; es lo que hace una hoja que toma el máximo) |
-| A para exigir curva (%) | — | Los PVI sin curva con A igual o mayor se marcan NO CUMPLE (falta curva). Usa el umbral de tu norma y tipo de vía |
+| Longitud de curva | — | *Fórmula*: usa L de Dp < L si resulta ≥ Dp; si no, la de Dp > L. *Máximo*: la mayor de ambas (más conservador) |
+| A para exigir curva (%) | — | Los PVI sin curva con A igual o mayor se marcan NO CUMPLE (falta curva) |
 | Longitud mínima absoluta (m) | — | 0 = no aplicar. La L exigida es la mayor entre la de visibilidad y esta |
 | Da (m) | — | 0 = no evaluar adelantamiento. También puede venir por tramo (cuarta columna del archivo de velocidades) |
-| Altura objeto adelantamiento (m) | 1.30 | Solo si se evalúa Da |
-| *Solo VISPARADA:* | | |
-| Desfase carril creciente / decreciente (m) | — | Centro de carril. Positivo = derecha del eje en el sentido de las progresivas (por ejemplo +1.65 / −1.65) |
-| Intervalo (m) | — | Separación entre progresivas evaluadas |
-| Sentido | — | Ambos / Creciente / Decreciente |
-| Criterio de pendiente | — | `Desfavorable`: menor pendiente (más en bajada) dentro de la DVP. `Promedio`: pendiente media en esa longitud |
-| Precisión | — | Normal: muestreo 1 m / búsqueda 5 m. Fina: 0.5 / 2.5 m. Rápida: 2 / 10 m |
-| Dibujar sectores | — | Polilíneas en las capas `VIS-PARADA-DEF-CRECIENTE` (roja) y `VIS-PARADA-DEF-DECRECIENTE` (magenta) |
+| Altura objeto adelantamiento (m) | 1.30 | |
 
-**Resultado de la verificación**
+Los campos vienen precargados con los valores de referencia de la DG-2018; edítalos según tu norma y tipo de vía.
 
-Al terminar, la línea de comandos muestra cada PVI con su comprobación y un veredicto final. Por ejemplo:
+**Superficie (opcional)**
 
-```
-  PVI   2    0+060.98  Cóncava   Lp = 57.26 m < Lmín = 146 m (Kp = 12.12 < Kmín = 30.90); faltan 88.75 m → NO CUMPLE
-  PVI   4    0+413.02  Convexa   Lp = 211.50 m ≥ Lmín = 95 m (Kp = 90.00 ≥ Kmín = 40.43) → CUMPLE
-  ...
-========================================
-  VERIFICACIÓN: NO CUMPLE
-========================================
-  Curvas verticales: NO CUMPLEN
-  - 1 curva(s) vertical(es) con longitud menor a la mínima: PVI 2 (0+060.98).
-  - 3 PVI sin curva vertical que la requieren: PVI 17 (3+985.06), 18 (4+209.44), 19 (4+264.93).
-```
+Desactivada por defecto. Al activarla se pide la superficie de obstrucción (corredor con taludes, Top + daylight; no el terreno natural), los desfases de carril (positivo = derecha del eje en el sentido de las progresivas, por ejemplo +1.65 / −1.65), el intervalo entre progresivas, el sentido, el criterio de pendiente (*Desfavorable*: menor pendiente dentro de la DVP; *Promedio*: pendiente media), la precisión (Normal 1 m / 5 m, Fina 0.5 / 2.5, Rápida 2 / 10) y si se dibujan en planta los sectores deficientes (capas `VIS-PARADA-DEF-CRECIENTE`, roja, y `VIS-PARADA-DEF-DECRECIENTE`, magenta). Este análisis tarda más; el botón *Cancelar análisis* lo interrumpe.
 
-El informe HTML abre con el mismo veredicto en un recuadro verde (CUMPLE) o rojo (NO CUMPLE) y sus motivos. La tabla de curvas incluye las columnas **Estado** y **Verificación**, con la comparación Lp contra Lmín y Kp contra Kmín. En VISPARADA el veredicto incluye también la visibilidad a lo largo del eje, con los sectores que no cumplen.
+**Resultados**
 
-Archivos generados: VISPARADA crea `Informe_DVP.html`, `Informe_DVP.csv` (detalle por progresiva) e `Informe_DVP_curvas.csv`. VISCURVAS crea el HTML y un CSV con la tabla de curvas. ESC cancela.
+Un recuadro verde (CUMPLE) o rojo (NO CUMPLE) con los motivos, y la tabla de curvas verticales: PVI, ubicación, tipo, V, Pe, Ps, A, Dp calculada, L mínima exigida, L de proyecto, K mínima y de proyecto, estado por visibilidad de parada, Da, L requerida por adelantamiento, si permite adelantar y el texto de la verificación (Lp contra Lmín y Kp contra Kmín). Las filas que no cumplen van en rojo. Si se activó la superficie, debajo aparece la tabla de sectores del eje sin visibilidad suficiente. Los botones *Abrir informe HTML* y *Abrir carpeta* llevan a los archivos generados.
+
+**Comandos de línea**: `VISCURVAS` (solo curvas) y `VISPARADA` (curvas más superficie) piden los mismos datos uno por uno en la línea de comandos, sin valores por defecto, y generan los mismos informes. ESC cancela.
 
 ## 4. Qué calcula
 
@@ -148,7 +138,9 @@ Nucleo/   Cálculo e informe, sin dependencias de Autodesk
   Informe.cs      HTML, CSV y lectura del archivo de velocidades
 Civil/    Conexión con Civil 3D
   Adaptadores.cs  Alineamiento, perfil (incluida la lectura de PVI y curvas) y superficie
-  Comando.cs      Comandos VISPARADA y VISCURVAS, solicitudes, dibujo de sectores
+  Motor.cs        Ejecuta el análisis (curvas y, opcionalmente, superficie), dibuja sectores y escribe los informes
+  VentanaVisibilidad.xaml/.cs  Cuadro de diálogo del comando VISIBILIDAD (selección, parámetros, resultados)
+  Comando.cs      Comandos VISIBILIDAD (ventana), VISPARADA y VISCURVAS (línea de comandos)
   Cinta.cs        Pestaña ARBA de la cinta (compartible con otros plugins) y arranque del plugin
 Bundle/   PackageContents.xml para la carga automática (ApplicationPlugins)
 instalar.ps1  Compila e instala el paquete de carga automática

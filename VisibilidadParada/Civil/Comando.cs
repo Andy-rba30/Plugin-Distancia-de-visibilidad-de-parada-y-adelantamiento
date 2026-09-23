@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
-using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using VisibilidadParada.Nucleo;
 using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
@@ -23,9 +21,24 @@ namespace VisibilidadParada.Civil
         // Parámetros de la ejecución actual (se reinician en cada comando: nada queda precargado)
         private static Parametros P = new Parametros();
 
-        private const string CapaCreciente = "VIS-PARADA-DEF-CRECIENTE";
-        private const string CapaDecreciente = "VIS-PARADA-DEF-DECRECIENTE";
+        /// <summary>Comando principal: ventana única para elegir perfil, configurar parámetros y ver la tabla de resultados.</summary>
+        [CommandMethod("VISIBILIDAD")]
+        public void Visibilidad()
+        {
+            var doc = AcApp.DocumentManager.MdiActiveDocument;
+            if (doc == null) return;
+            try
+            {
+                var ventana = new VentanaVisibilidad(doc);
+                AcApp.ShowModalWindow(ventana);
+            }
+            catch (System.Exception ex)
+            {
+                doc.Editor.WriteMessage("\nError en VISIBILIDAD: " + ex.Message);
+            }
+        }
 
+        /// <summary>Versión de línea de comandos con superficie (equivale a VISIBILIDAD con la comprobación contra superficie activada).</summary>
         [CommandMethod("VISPARADA")]
         public void VisParada()
         {
@@ -69,90 +82,33 @@ namespace VisibilidadParada.Civil
                 if (rFile.Status != PromptStatus.OK) return;
                 string rutaHtml = rFile.StringResult;
                 if (!rutaHtml.EndsWith(".html", StringComparison.OrdinalIgnoreCase)) rutaHtml += ".html";
-                string rutaCsv = Path.ChangeExtension(rutaHtml, ".csv");
 
-                // 4. Cálculo -----------------------------------------------------------------
-                var reloj = Stopwatch.StartNew();
-                var datos = new DatosInforme { P = P, Dibujo = Path.GetFileName(db.Filename) };
-                bool cancelado = false;
-
-                using (var tr = db.TransactionManager.StartTransaction())
+                // 4. Cálculo e informe --------------------------------------------------------
+                var o = new OpcionesAnalisis { Alineamiento = rAl.ObjectId, Perfil = idPerfil, Superficie = rSu.ObjectId, P = P, RutaHtml = rutaHtml };
+                ProgressMeter pm = null;
+                ResultadoEjecucion res;
+                try
                 {
-                    var al = (CivAlignment)tr.GetObject(rAl.ObjectId, OpenMode.ForRead);
-                    var pr = (CivProfile)tr.GetObject(idPerfil, OpenMode.ForRead);
-                    var su = (CivSurface)tr.GetObject(rSu.ObjectId, OpenMode.ForRead);
-
-                    datos.Eje = al.Name; datos.Perfil = pr.Name; datos.Superficie = su.Name;
-                    datos.Curvas = CurvasVerticales.Analizar(GeometriaPerfil.LeerPvis(pr), P);
-
-                    double sMin = Math.Max(al.StartingStation, pr.StartingStation);
-                    double sMax = Math.Min(al.EndingStation, pr.EndingStation);
-                    if (sMax - sMin < 1.0)
+                    res = Motor.Ejecutar(db, o, (i, n) =>
                     {
-                        ed.WriteMessage("\nEl perfil no cubre un rango útil del alineamiento.");
-                        return;
-                    }
-                    datos.SMin = sMin; datos.SMax = sMax;
-
-                    var eje = new EjeCivil(al);
-                    var an = new Analizador(eje, new RasanteCivil(pr), new SuperficieCivil(su), P, sMin, sMax);
-
-                    var sentidos = new List<int>();
-                    if (P.Sentido != SentidoAnalisis.Decreciente) sentidos.Add(1);
-                    if (P.Sentido != SentidoAnalisis.Creciente) sentidos.Add(-1);
-
-                    var progs = Analizador.Progresivas(sMin, sMax, P.Intervalo);
-                    var res = new List<ResultadoPunto>(progs.Count * sentidos.Count);
-
-                    ed.WriteMessage($"\nEvaluando {progs.Count} progresivas × {sentidos.Count} sentido(s). Pulse ESC para cancelar.");
-                    var pm = new ProgressMeter();
-                    pm.SetLimit(progs.Count * sentidos.Count);
-                    pm.Start("Verificando visibilidad de parada");
-                    try
-                    {
-                        foreach (int sen in sentidos)
+                        if (pm == null)
                         {
-                            foreach (double s in progs)
-                            {
-                                if (Interrumpido()) { cancelado = true; break; }
-                                res.Add(an.Evaluar(s, sen));
-                                pm.MeterProgress();
-                            }
-                            if (cancelado) break;
+                            ed.WriteMessage($"\nEvaluando {n} puntos. Pulse ESC para cancelar.");
+                            pm = new ProgressMeter();
+                            pm.SetLimit(n);
+                            pm.Start("Verificando visibilidad de parada");
                         }
-                    }
-                    finally { pm.Stop(); }
-
-                    if (cancelado)
-                    {
-                        ed.WriteMessage("\nAnálisis cancelado por el usuario.");
-                        return;
-                    }
-
-                    datos.Resultados = res;
-                    datos.Sectores = Analizador.Sectores(res, P);
-                    datos.MuestrasFuera = an.MuestrasFuera;
-                    datos.PuntosSinSuperficie = an.PuntosSinSuperficie;
-
-                    if (P.Dibujar && datos.Sectores.Count > 0)
-                        DibujarSectores(tr, db, eje, datos.Sectores, sMin, sMax);
-
-                    tr.Commit();
+                        pm.MeterProgress();
+                    }, Interrumpido);
                 }
+                finally { pm?.Stop(); }
 
-                reloj.Stop();
-                datos.Duracion = reloj.Elapsed;
+                if (res.Error != null) { ed.WriteMessage("\n" + res.Error); return; }
+                if (res.Cancelado) { ed.WriteMessage("\nAnálisis cancelado por el usuario."); return; }
 
-                // 5. Informe --------------------------------------------------------------
-                string rutaCsvCurvas = Path.Combine(Path.GetDirectoryName(rutaHtml) ?? "",
-                    Path.GetFileNameWithoutExtension(rutaHtml) + "_curvas.csv");
-                Informe.EscribirHtml(rutaHtml, datos);
-                Informe.EscribirCsv(rutaCsv, datos);
-                Informe.EscribirCsvCurvas(rutaCsvCurvas, datos);
-
-                MostrarVeredicto(ed, datos);
-                ed.WriteMessage($"\nInforme: {rutaHtml}\nDetalle CSV: {rutaCsv}\nCurvas CSV: {rutaCsvCurvas}");
-                try { Process.Start(new ProcessStartInfo(rutaHtml) { UseShellExecute = true }); } catch { }
+                MostrarVeredicto(ed, res.Datos);
+                ed.WriteMessage($"\nInforme: {res.RutaHtml}\nDetalle CSV: {res.RutaCsvPuntos}\nCurvas CSV: {res.RutaCsvCurvas}");
+                Motor.AbrirArchivo(res.RutaHtml);
             }
             catch (System.Exception ex)
             {
@@ -194,27 +150,14 @@ namespace VisibilidadParada.Civil
                 if (rFile.Status != PromptStatus.OK) return;
                 string rutaHtml = rFile.StringResult;
                 if (!rutaHtml.EndsWith(".html", StringComparison.OrdinalIgnoreCase)) rutaHtml += ".html";
-                string rutaCsv = Path.ChangeExtension(rutaHtml, ".csv");
 
-                var reloj = Stopwatch.StartNew();
-                var datos = new DatosInforme { P = P, Dibujo = Path.GetFileName(db.Filename) };
-                using (var tr = db.TransactionManager.StartTransaction())
-                {
-                    var al = (CivAlignment)tr.GetObject(rAl.ObjectId, OpenMode.ForRead);
-                    var pr = (CivProfile)tr.GetObject(idPerfil, OpenMode.ForRead);
-                    datos.Eje = al.Name; datos.Perfil = pr.Name;
-                    datos.SMin = Math.Max(al.StartingStation, pr.StartingStation);
-                    datos.SMax = Math.Min(al.EndingStation, pr.EndingStation);
-                    datos.Curvas = CurvasVerticales.Analizar(GeometriaPerfil.LeerPvis(pr), P);
-                    tr.Commit();
-                }
-                datos.Duracion = reloj.Elapsed;
+                var o = new OpcionesAnalisis { Alineamiento = rAl.ObjectId, Perfil = idPerfil, P = P, RutaHtml = rutaHtml };
+                var res = Motor.Ejecutar(db, o, null, null);
+                if (res.Error != null) { ed.WriteMessage("\n" + res.Error); return; }
 
-                Informe.EscribirHtml(rutaHtml, datos);
-                Informe.EscribirCsvCurvas(rutaCsv, datos);
-                MostrarVeredicto(ed, datos);
-                ed.WriteMessage($"\nInforme: {rutaHtml}\nCSV: {rutaCsv}");
-                try { Process.Start(new ProcessStartInfo(rutaHtml) { UseShellExecute = true }); } catch { }
+                MostrarVeredicto(ed, res.Datos);
+                ed.WriteMessage($"\nInforme: {res.RutaHtml}\nCSV: {res.RutaCsvCurvas}");
+                Motor.AbrirArchivo(res.RutaHtml);
             }
             catch (System.Exception ex)
             {
@@ -420,51 +363,5 @@ namespace VisibilidadParada.Civil
             try { return HostApplicationServices.Current.UserBreak(); } catch { return false; }
         }
 
-        // -------------------------------------------------------------------------------
-        private static void DibujarSectores(Transaction tr, Database db, IEje eje, List<Sector> sectores,
-                                            double sMin, double sMax)
-        {
-            var idCapaC = Capa(tr, db, CapaCreciente, 1);   // rojo
-            var idCapaD = Capa(tr, db, CapaDecreciente, 6); // magenta
-
-            var bt = (BlockTable)tr.GetObject(db.BlockTableId, OpenMode.ForRead);
-            var ms = (BlockTableRecord)tr.GetObject(bt[BlockTableRecord.ModelSpace], OpenMode.ForWrite);
-
-            double medio = P.Intervalo / 2.0;
-            foreach (var sec in sectores)
-            {
-                double a = Math.Max(sMin, sec.Inicio - medio);
-                double b = Math.Min(sMax, sec.Fin + medio);
-                double paso = Math.Max(0.5, P.Intervalo / 4.0);
-
-                var pl = new Polyline();
-                int k = 0;
-                for (double s = a; s <= b + 1e-6; s += paso)
-                {
-                    double st = Math.Min(s, b);
-                    if (eje.Ubicar(st, sec.Desfase, out double x, out double y))
-                        pl.AddVertexAt(k++, new Point2d(x, y), 0, 0.6, 0.6);
-                }
-                if (eje.Ubicar(b, sec.Desfase, out double xf, out double yf) &&
-                    (k == 0 || pl.GetPoint2dAt(k - 1).GetDistanceTo(new Point2d(xf, yf)) > 0.01))
-                    pl.AddVertexAt(k++, new Point2d(xf, yf), 0, 0.6, 0.6);
-
-                if (k < 2) { pl.Dispose(); continue; }
-                pl.LayerId = sec.Sentido > 0 ? idCapaC : idCapaD;
-                ms.AppendEntity(pl);
-                tr.AddNewlyCreatedDBObject(pl, true);
-            }
-        }
-
-        private static ObjectId Capa(Transaction tr, Database db, string nombre, short aci)
-        {
-            var lt = (LayerTable)tr.GetObject(db.LayerTableId, OpenMode.ForRead);
-            if (lt.Has(nombre)) return lt[nombre];
-            lt.UpgradeOpen();
-            var ltr = new LayerTableRecord { Name = nombre, Color = Color.FromColorIndex(ColorMethod.ByAci, aci) };
-            var id = lt.Add(ltr);
-            tr.AddNewlyCreatedDBObject(ltr, true);
-            return id;
-        }
     }
 }

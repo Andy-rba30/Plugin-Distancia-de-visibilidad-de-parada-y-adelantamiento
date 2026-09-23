@@ -14,10 +14,11 @@
                     AppType=".NET"
                     Version="1.0.0"
                     ModuleName="./Contents/VisibilidadParada.dll"
-                    AppDescription="Comandos VISCURVAS y VISPARADA en la pestaña ARBA"
+                    AppDescription="Comando VISIBILIDAD (pestaña ARBA): verificación de curvas verticales por visibilidad de parada y adelantamiento"
                     LoadOnAutoCADStartup="True"
                     LoadOnRequest="True">
       <Commands GroupName="ARBA_VISIBILIDAD">
+        <Command Global="VISIBILIDAD" Local="VISIBILIDAD" />
         <Command Global="VISCURVAS" Local="VISCURVAS" />
         <Command Global="VISPARADA" Local="VISPARADA" />
       </Commands>

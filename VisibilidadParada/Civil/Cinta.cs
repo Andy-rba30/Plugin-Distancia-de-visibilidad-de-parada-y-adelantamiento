@@ -149,12 +149,8 @@ namespace VisibilidadParada.Civil
                 var panel = ObtenerPanel("ARBA_VISIBILIDAD", "Visibilidad");
                 if (panel == null) return;
 
-                AgregarBoton(panel, "ARBA_VISCURVAS", "Curvas\nverticales", "VISCURVAS",
-                    "Verifica cada curva vertical del perfil por visibilidad de parada y adelantamiento. No necesita superficie.",
-                    ColorVisibilidad, "CV");
-
-                AgregarBoton(panel, "ARBA_VISPARADA", "Visibilidad\nde parada", "VISPARADA",
-                    "Verifica la DVP en cada progresiva del eje contra la superficie del corredor, además de las curvas verticales.",
+                AgregarBoton(panel, "ARBA_BTN_VISIBILIDAD", "Visibilidad\nde parada", "VISIBILIDAD",
+                    "Verifica las curvas verticales del perfil por visibilidad de parada y adelantamiento, y muestra la tabla de CUMPLE / NO CUMPLE.",
                     ColorVisibilidad, "Dp");
             }
             catch (System.Exception ex)
