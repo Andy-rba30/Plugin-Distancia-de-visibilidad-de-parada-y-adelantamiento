@@ -7,6 +7,7 @@ No usa http.sys ni necesita permisos de administrador.
 - Comando `ARBAMCP` (botón *Conexión IA* de la pestaña ARBA): muestra si está activo, el puerto y las últimas líneas del historial.
 - Todas las llamadas a la API de Civil 3D se ejecutan en el hilo principal. Si Civil 3D está ocupado
   (comando activo o cuadro de diálogo modal abierto) la petición espera; pasado `timeout_s` responde error.
+  Si la acción seguía en cola se descarta (no se ejecutará al liberarse Civil 3D) y el mensaje lo indica.
 
 ## Seguridad (desde la versión 1.1.0)
 

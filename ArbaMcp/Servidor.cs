@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,8 +18,8 @@ namespace ArbaMcp
     /// Servidor HTTP mínimo (sin http.sys, sin permisos de administrador) que escucha solo en 127.0.0.1.
     /// Contrato:
     ///   GET  /tools                 → lista de herramientas con parámetros
-    ///   GET  /ping                  â†’ estado
-    ///   POST /execute {tool, args}  â†’ {"ok":true,"result":...} o {"ok":false,"error":"..."}
+    ///   GET  /ping                  → estado
+    ///   POST /execute {tool, args}  → {"ok":true,"result":...} o {"ok":false,"error":"..."}
     /// Puerto: variable de entorno ARBA_MCP_PORT (por defecto 8765). ARBA_MCP=0 desactiva el servidor.
     /// </summary>
     internal static class Servidor
@@ -209,20 +209,35 @@ namespace ArbaMcp
             var herramienta = Herramientas.Buscar(nombre);
             if (herramienta == null) return Error("Herramienta desconocida: '" + nombre + "'. Consulta GET /tools.");
 
-            Historial.Registrar("MCP â†’ " + nombre);
+            Historial.Registrar("MCP → " + nombre);
             var reloj = System.Diagnostics.Stopwatch.StartNew();
             try
             {
-                                Task<object> tareaPrincipal;
-                if (herramienta.EjecutarAsync != null) {
+                Task<object> tareaPrincipal;
+                HiloPrincipal.Pendiente pendiente = null;
+                if (herramienta.EjecutarAsync != null)
+                {
                     tareaPrincipal = herramienta.EjecutarAsync(args);
-                } else {
-                    tareaPrincipal = HiloPrincipal.Ejecutar(() => herramienta.Ejecutar(args));
+                }
+                else
+                {
+                    pendiente = HiloPrincipal.Encolar(() => herramienta.Ejecutar(args));
+                    tareaPrincipal = pendiente.Tarea;
                 }
 
                 var terminada = await Task.WhenAny(tareaPrincipal, Task.Delay(TimeSpan.FromSeconds(timeoutS + 5)));
                 if (terminada != tareaPrincipal)
-                    return Error("Tiempo agotado (" + timeoutS + " s). Civil 3D puede estar ocupado o con un cuadro de diálogo abierto.");
+                {
+                    string detalle;
+                    if (pendiente == null)
+                        detalle = "el comando pudo haberse enviado; consulta leer_historial.";
+                    else if (pendiente.Descartar())
+                        detalle = "la acción seguía en cola y se ha descartado: no se ejecutó.";
+                    else
+                        detalle = "Civil 3D empezó a ejecutarla y sigue ocupado; terminará por su cuenta.";
+                    Historial.Registrar("MCP ← " + nombre + " TIEMPO AGOTADO (" + timeoutS + " s): " + detalle);
+                    return Error("Tiempo agotado (" + timeoutS + " s): " + detalle + " Civil 3D puede estar ocupado o con un cuadro de diálogo abierto.");
+                }
                 object resultado = await tareaPrincipal;
                 Historial.Registrar("MCP ✓ " + nombre + " OK (" + reloj.ElapsedMilliseconds + " ms)");
                 return JsonSerializer.Serialize(new { ok = true, tool = nombre, ms = reloj.ElapsedMilliseconds, result = resultado }, Json);
@@ -230,7 +245,7 @@ namespace ArbaMcp
             catch (System.Exception ex)
             {
                 var raiz = ex; while (raiz.InnerException != null) raiz = raiz.InnerException;
-                Historial.Registrar("MCP â† " + nombre + " ERROR: " + raiz.Message + " " + raiz.StackTrace);
+                Historial.Registrar("MCP ← " + nombre + " ERROR: " + raiz.Message + " " + raiz.StackTrace);
                 return Error(raiz.GetType().Name + ": " + raiz.Message);
             }
         }
@@ -293,17 +308,33 @@ namespace ArbaMcp
             {
                 foreach (Document d in AcApp.DocumentManager) Enganchar(d);
                 AcApp.DocumentManager.DocumentCreated += (s, e) => Enganchar(e.Document);
+                AcApp.DocumentManager.DocumentToBeDestroyed += (s, e) => Desenganchar(e.Document);
             }
             catch (System.Exception ex) { Registrar("No se pudieron enganchar los eventos de documento: " + ex.Message); }
         }
 
+        // Manejadores con nombre para poder desengancharlos cuando el dibujo se cierra
+        private static void AlIniciarComando(object s, CommandEventArgs e) => Registrar("Comando inicia: " + e.GlobalCommandName);
+        private static void AlTerminarComando(object s, CommandEventArgs e) => Registrar("Comando termina: " + e.GlobalCommandName);
+        private static void AlCancelarComando(object s, CommandEventArgs e) => Registrar("Comando cancelado: " + e.GlobalCommandName);
+        private static void AlFallarComando(object s, CommandEventArgs e) => Registrar("Comando falló: " + e.GlobalCommandName);
+
         private static void Enganchar(Document d)
         {
             if (d == null) return;
-            d.CommandWillStart += (s, e) => Registrar("Comando inicia: " + e.GlobalCommandName);
-            d.CommandEnded += (s, e) => Registrar("Comando termina: " + e.GlobalCommandName);
-            d.CommandCancelled += (s, e) => Registrar("Comando cancelado: " + e.GlobalCommandName);
-            d.CommandFailed += (s, e) => Registrar("Comando falló: " + e.GlobalCommandName);
+            d.CommandWillStart += AlIniciarComando;
+            d.CommandEnded += AlTerminarComando;
+            d.CommandCancelled += AlCancelarComando;
+            d.CommandFailed += AlFallarComando;
+        }
+
+        private static void Desenganchar(Document d)
+        {
+            if (d == null) return;
+            d.CommandWillStart -= AlIniciarComando;
+            d.CommandEnded -= AlTerminarComando;
+            d.CommandCancelled -= AlCancelarComando;
+            d.CommandFailed -= AlFallarComando;
         }
     }
 }
