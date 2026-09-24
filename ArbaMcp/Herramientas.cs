@@ -285,6 +285,15 @@ namespace ArbaMcp
 
                     Document doc = DocActivo();
                     int iniciado = 0; // se escribe en el hilo principal y se lee en el del servidor
+                    int grupoCerrado = 0;
+                    Historial.Registrar("ejecutar_comando: '" + comando + "' con tiempo máximo " + (timeoutMs / 1000) + " s");
+
+                    // Cierra el grupo de UNDO una sola vez, venga de donde venga (fin, cancelación, fallo o tiempo agotado)
+                    void CerrarGrupo(string prefijo)
+                    {
+                        if (System.Threading.Interlocked.Exchange(ref grupoCerrado, 1) == 0)
+                            doc.SendStringToExecute(prefijo + "_.UNDO _E\n", false, false, false);
+                    }
 
                     void OnCommandWillStart(object s, CommandEventArgs e)
                     {
@@ -293,21 +302,21 @@ namespace ArbaMcp
                     void OnCommandEnded(object s, CommandEventArgs e)
                     {
                         if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) {
-                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            CerrarGrupo("");
                             tcs.TrySetResult("terminado");
                         }
                     }
                     void OnCommandCancelled(object s, CommandEventArgs e)
                     {
                         if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) {
-                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            CerrarGrupo("");
                             tcs.TrySetResult("cancelado");
                         }
                     }
                     void OnCommandFailed(object s, CommandEventArgs e)
                     {
                         if (e.GlobalCommandName.ToUpperInvariant() == cmdParse) {
-                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            CerrarGrupo("");
                             tcs.TrySetResult("fallido");
                         }
                     }
@@ -335,28 +344,31 @@ namespace ArbaMcp
                     }
                     if (System.Threading.Volatile.Read(ref iniciado) == 0 && !tcs.Task.IsCompleted) {
                         await HiloPrincipal.Ejecutar(() => {
-                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
+                            CerrarGrupo("");
                             tcs.TrySetResult("el comando no se inició (¿nombre incorrecto?)");
                             return true;
                         });
                     }
 
                     var completada = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
-                    
-                    await HiloPrincipal.Ejecutar(() =>
+
+                    if (completada != tcs.Task && !tcs.Task.IsCompleted)
+                    {
+                        // Mientras un comando espera entrada del usuario, el evento Idle no llega y un trabajo
+                        // encolado en HiloPrincipal no se atendería. SendStringToExecute solo encola teclas,
+                        // así que los ESC y el cierre del grupo se envían directamente desde este hilo.
+                        Historial.Registrar("ejecutar_comando: tiempo agotado a los " + (timeoutMs / 1000) + " s, se envían ESC");
+                        CerrarGrupo("\x1B\x1B");
+                        tcs.TrySetResult("timeout con ESC");
+                    }
+
+                    // Los manejadores se desenganchan en el hilo principal cuando llegue Idle; no hace falta esperar
+                    _ = HiloPrincipal.Ejecutar(() =>
                     {
                         doc.CommandWillStart -= OnCommandWillStart;
                         doc.CommandEnded -= OnCommandEnded;
                         doc.CommandCancelled -= OnCommandCancelled;
                         doc.CommandFailed -= OnCommandFailed;
-                        
-                        if (completada != tcs.Task && !tcs.Task.IsCompleted) {
-                            // Los manejadores ya están desenganchados: el UNDO _E hay que enviarlo aquí,
-                            // detrás de los ESC, para que el grupo no quede abierto.
-                            doc.SendStringToExecute("\x1B\x1B", false, false, false);
-                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
-                            tcs.TrySetResult("timeout con ESC");
-                        }
                         return true;
                     });
 
