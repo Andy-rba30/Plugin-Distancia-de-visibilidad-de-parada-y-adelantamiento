@@ -7,11 +7,6 @@ obj/
 *.dll
 *.pdb
 
-# Python (PuenteMcp)
-.venv/
-__pycache__/
-*.pyc
-
 # Restos de trabajo local
 patch_*.py
 resize_icons.py

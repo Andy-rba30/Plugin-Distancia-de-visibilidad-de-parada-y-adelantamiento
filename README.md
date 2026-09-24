@@ -4,6 +4,6 @@ Plugin para Civil 3D 2027 (.NET 10). Un solo comando, **VISIBILIDAD**, en la pes
 
 El código, las instrucciones de compilación y uso, y los informes de ejemplo están en la carpeta [`VisibilidadParada`](VisibilidadParada/). Lee [`VisibilidadParada/LEEME.md`](VisibilidadParada/LEEME.md) para empezar.
 
-## ArbaMcp: conector para agentes de IA
+## Conector para agentes de IA
 
-Plugin aparte, en la carpeta [`ArbaMcp`](ArbaMcp/), que abre un servidor local en Civil 3D para que un puente MCP (como el de Revit) permita a un agente listar alineamientos, perfiles y superficies, ejecutar comandos, capturar la pantalla y más. Ver [`ArbaMcp/LEEME.md`](ArbaMcp/LEEME.md) y [`ArbaMcp/CONTRATO.md`](ArbaMcp/CONTRATO.md).
+El plugin ArbaMcp (servidor local en Civil 3D) y el puente MCP en Python viven en su propio repositorio: [civil3d-mcp](https://github.com/Andy-rba30/civil3d-mcp). Este repo contiene solo el plugin de visibilidad.
