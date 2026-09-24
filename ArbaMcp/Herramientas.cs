@@ -351,7 +351,10 @@ namespace ArbaMcp
                         doc.CommandFailed -= OnCommandFailed;
                         
                         if (completada != tcs.Task && !tcs.Task.IsCompleted) {
+                            // Los manejadores ya están desenganchados: el UNDO _E hay que enviarlo aquí,
+                            // detrás de los ESC, para que el grupo no quede abierto.
                             doc.SendStringToExecute("\x1B\x1B", false, false, false);
+                            doc.SendStringToExecute("_.UNDO _E\n", false, false, false);
                             tcs.TrySetResult("timeout con ESC");
                         }
                         return true;

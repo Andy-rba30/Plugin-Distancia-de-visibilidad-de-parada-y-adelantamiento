@@ -254,7 +254,11 @@ namespace ArbaMcp
 
         private static async Task Responder(NetworkStream ns, int codigo, string json)
         {
-            string estado = codigo == 200 ? "OK" : codigo == 204 ? "No Content" : codigo == 400 ? "Bad Request" : codigo == 404 ? "Not Found" : codigo == 413 ? "Payload Too Large" : "Internal Server Error";
+            string estado = codigo switch
+            {
+                200 => "OK", 204 => "No Content", 400 => "Bad Request", 401 => "Unauthorized", 403 => "Forbidden",
+                404 => "Not Found", 413 => "Payload Too Large", 415 => "Unsupported Media Type", _ => "Internal Server Error"
+            };
             var cuerpo = Encoding.UTF8.GetBytes(json ?? "");
             var cab = "HTTP/1.1 " + codigo + " " + estado + "\r\n" +
                       "Content-Type: application/json; charset=utf-8\r\n" +
