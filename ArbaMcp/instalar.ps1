@@ -1,4 +1,4 @@
-# Compila el plugin e instala el paquete de carga automática en
+# Compila el plugin e instala el paquete de carga automatica en
 # %APPDATA%\Autodesk\ApplicationPlugins\ArbaMcp.bundle
 # Uso (PowerShell, en esta carpeta):  .\instalar.ps1
 param([string]$Configuracion = "Release")
@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 $raiz = $PSScriptRoot
 
 if (Get-Process -Name "acad" -ErrorAction SilentlyContinue) {
-    Write-Host "Cierra Civil 3D antes de instalar (la DLL está en uso)." -ForegroundColor Yellow
+    Write-Host "Cierra Civil 3D antes de instalar (la DLL esta en uso)." -ForegroundColor Yellow
     exit 1
 }
 
@@ -17,7 +17,7 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $dll = Get-ChildItem "$raiz\bin" -Recurse -Filter "ArbaMcp.dll" |
        Sort-Object LastWriteTime -Descending | Select-Object -First 1
-if (-not $dll) { throw "No se encontró ArbaMcp.dll en bin\. ¿Falló la compilación?" }
+if (-not $dll) { throw "No se encontro ArbaMcp.dll en bin\. Fallo la compilacion?" }
 
 $bundle = Join-Path $env:APPDATA "Autodesk\ApplicationPlugins\ArbaMcp.bundle"
 New-Item -ItemType Directory -Force -Path (Join-Path $bundle "Contents") | Out-Null
@@ -28,4 +28,4 @@ if (Test-Path $pdb) { Copy-Item $pdb (Join-Path $bundle "Contents") -Force }
 
 Write-Host ""
 Write-Host "Instalado en: $bundle" -ForegroundColor Green
-Write-Host "Abre Civil 3D: en la pestaña ARBA aparecerá el botón Conexión IA."
+Write-Host "Abre Civil 3D: en la pestana ARBA aparecera el boton Conexion IA."
