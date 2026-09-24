@@ -49,7 +49,7 @@ registrar cada herramienta de forma dinámica, de modo que al añadir herramient
 | `listar_perfiles` | alineamiento* | nombre, tipo (EG/FG), inicio, fin, pvis |
 | `listar_superficies` | — | nombre, tipo |
 | `abrir_dibujo` | ruta* | abierto |
-| `ejecutar_comando` | comando*, timeout_s | Espera a que el comando termine y devuelve `terminado`, `cancelado`, `fallido`, `el comando no se inició (¿nombre incorrecto?)` o `timeout con ESC`. Si hay un comando activo en Civil 3D responde error sin enviar nada. Cada orden va entre `_.UNDO _BE` y `_.UNDO _E`, así un solo Ctrl+Z la revierte. Si se agota `timeout_s` (60 por defecto) envía dos ESC para cancelar |
+| `ejecutar_comando` | comando*, timeout_s | Espera a que el comando termine y devuelve `terminado`, `cancelado`, `fallido`, `el comando no se inició en N s (¿nombre incorrecto o Civil 3D ocupado?)` o `timeout con ESC`. Si hay un comando activo en Civil 3D responde error sin enviar nada. Cada orden va entre `_.UNDO _BE` y `_.UNDO _E`, así un solo Ctrl+Z la revierte. Si se agota `timeout_s` (60 por defecto) envía dos ESC para cancelar |
 | `leer_historial` | ultimas_n | líneas con hora: comandos iniciados/terminados, llamadas MCP, mensajes |
 | `capturar_pantalla` | ruta | ruta del PNG, ancho, alto (ventana principal de Civil 3D, con diálogos) |
 | `listar_pvis` | alineamiento*, perfil* | n, progresiva, cota, pe_pct, ps_pct, a_pct, tiene_curva, tipo_curva, longitud_curva |

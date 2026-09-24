@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Paquete de carga automática. Se copia a %APPDATA%\Autodesk\ApplicationPlugins\ArbaMcp.bundle -->
 <ApplicationPackage SchemaVersion="1.0" AutodeskProduct="AutoCAD"
-                    AppVersion="1.1.2"
+                    AppVersion="1.1.3"
                     Description="Conector entre Civil 3D y un agente de IA por MCP (pestaña ARBA)"
                     Author="ARBA"
                     Name="ArbaMcp"
@@ -12,7 +12,7 @@
     <RuntimeRequirements OS="Win64" Platform="AutoCAD|Civil3D" SeriesMin="R26.0" SeriesMax="R26.0" SupportPath="./Contents" />
     <ComponentEntry AppName="ArbaMcp"
                     AppType=".NET"
-                    Version="1.1.2"
+                    Version="1.1.3"
                     ModuleName="./Contents/ArbaMcp.dll"
                     AppDescription="Servidor local en 127.0.0.1:8765 para el puente MCP; botón Conexión IA en la pestaña ARBA"
                     LoadOnAutoCADStartup="True"

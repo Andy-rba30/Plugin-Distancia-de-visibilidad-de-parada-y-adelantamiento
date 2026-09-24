@@ -268,7 +268,7 @@ namespace ArbaMcp
             Registrar(new Herramienta
             {
                 Nombre = "ejecutar_comando",
-                Descripcion = "Envía un comando a la línea de comandos del dibujo activo y espera a que termine. Devuelve 'terminado', 'cancelado', 'fallido', 'el comando no se inició' o 'timeout con ESC'. Cada orden va en un grupo de UNDO (un solo Ctrl+Z la revierte).",
+                Descripcion = "Envía un comando a la línea de comandos del dibujo activo y espera a que termine. Devuelve 'terminado', 'cancelado', 'fallido', 'el comando no se inició en N s' o 'timeout con ESC'. Cada orden va en un grupo de UNDO (un solo Ctrl+Z la revierte).",
                 Parametros =
                 {
                     P("comando", "string", "Texto del comando, por ejemplo 'REGEN' o '_.ZOOM E'", true),
@@ -337,20 +337,23 @@ namespace ArbaMcp
                         return true;
                     });
 
-                    for (int i = 0; i < 30; i++) {
-                        if (tcs.Task.IsCompleted) break;
-                        if (System.Threading.Volatile.Read(ref iniciado) == 1) break;
+                    // Espera a que el comando arranque (o termine) dentro del tiempo máximo. Civil 3D puede tardar
+                    // varios segundos en procesar la cola de entrada si está ocupado con el dibujo.
+                    var reloj = System.Diagnostics.Stopwatch.StartNew();
+                    while (!tcs.Task.IsCompleted && System.Threading.Volatile.Read(ref iniciado) == 0 && reloj.ElapsedMilliseconds < timeoutMs)
                         await Task.Delay(100);
-                    }
-                    if (System.Threading.Volatile.Read(ref iniciado) == 0 && !tcs.Task.IsCompleted) {
-                        await HiloPrincipal.Ejecutar(() => {
-                            CerrarGrupo("");
-                            tcs.TrySetResult("el comando no se inició (¿nombre incorrecto?)");
-                            return true;
-                        });
+
+                    if (!tcs.Task.IsCompleted && System.Threading.Volatile.Read(ref iniciado) == 0)
+                    {
+                        // No arrancó en todo el tiempo. Los ESC van delante del cierre por si arranca tarde:
+                        // así el UNDO _E nunca entra como respuesta a un comando que acaba de empezar.
+                        Historial.Registrar("ejecutar_comando: '" + comando + "' no se inició en " + (timeoutMs / 1000) + " s");
+                        CerrarGrupo("\x1B\x1B");
+                        tcs.TrySetResult("el comando no se inició en " + (timeoutMs / 1000) + " s (¿nombre incorrecto o Civil 3D ocupado?)");
                     }
 
-                    var completada = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                    int restante = Math.Max(0, timeoutMs - (int)reloj.ElapsedMilliseconds);
+                    var completada = await Task.WhenAny(tcs.Task, Task.Delay(restante));
 
                     if (completada != tcs.Task && !tcs.Task.IsCompleted)
                     {
